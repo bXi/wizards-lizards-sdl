@@ -44,7 +44,7 @@ void Render2DComp::draw(flecs::entity* entity)
 
 		Rectangle source;
 		if (sprite->multiSheet) {
-			source = Textures::getTile(renderFrame, sprite->doubleHeight);
+			source = Textures::GetTile(renderFrame, sprite->doubleHeight);
 		}
 		else
 		{

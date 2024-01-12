@@ -79,19 +79,19 @@ void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, 
             int index = y * tiles.width + x;
 
 			Tile UPLEFTTILE = _dungeon.getTile(x - 1, y - 1);
-			//Tile DOWNLEFTTILE = _dungeon.getTile(x - 1, y + 1);
+			//Tile DOWNLEFTTILE = _dungeon.GetTile(x - 1, y + 1);
 
-			//Tile UPRIGHTTILE = _dungeon.getTile(x + 1, y - 1);
-			//Tile DOWNRIGHTTILE = _dungeon.getTile(x + 1, y + 1);
+			//Tile UPRIGHTTILE = _dungeon.GetTile(x + 1, y - 1);
+			//Tile DOWNRIGHTTILE = _dungeon.GetTile(x + 1, y + 1);
 
 			Tile LEFTTILE = _dungeon.getTile(x - 1, y);
-			//Tile RIGHTTILE = _dungeon.getTile(x + 1, y);
+			//Tile RIGHTTILE = _dungeon.GetTile(x + 1, y);
 
 			Tile UPTILE = _dungeon.getTile(x, y - 1);
-			//Tile DOWNTILE = _dungeon.getTile(x, y + 1);
+			//Tile DOWNTILE = _dungeon.GetTile(x, y + 1);
 
 
-			const Rectangle destRect = { static_cast<float>(x * Configuration::tileWidth), static_cast<float>(y * Configuration::tileHeight),  static_cast<float>(Configuration::tileWidth),  static_cast<float>(Configuration::tileHeight) };
+			const Rectangle destRect = {static_cast<float>(x * Configuration::tileWidth), static_cast<float>(y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
 
             drawToMap(&finalTextureImage, _dungeonTileset, getTile(tiles.tiles.at(index)), destRect, WHITE);
 

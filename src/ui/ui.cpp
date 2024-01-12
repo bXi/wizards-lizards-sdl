@@ -210,7 +210,7 @@ void UI::drawTimerBar() {
 
 
         Render2D::DrawTexturePart(uiElements, {boxPosition.x, boxPosition.y}, {boxPosition.width, boxPosition.height}, selectedPowerUpBox, color);
-        auto weaponIconPos = Textures::getTile(weaponIcon[i]);
+        auto weaponIconPos = Textures::GetTile(weaponIcon[i]);
 
         Render2D::DrawTexturePart(items, {itemPosition.x, itemPosition.y}, {itemPosition.width, itemPosition.height}, weaponIconPos, color);
 
