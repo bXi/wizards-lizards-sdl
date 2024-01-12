@@ -7,8 +7,8 @@ target_link_libraries(libs INTERFACE flecs::flecs_static)
 
 
 #box2d
+set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "Disable box2d test")
 add_subdirectory(box2d)
-set(BOX2D_BUILD_TESTBED OFF)
 target_link_libraries(libs INTERFACE box2d)
 
 #box2d

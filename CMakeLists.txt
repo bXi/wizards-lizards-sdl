@@ -10,10 +10,14 @@ enable_language(CXX)
 
 set(CMAKE_C_STANDARD 23)
 
+
+set(ADD_IMGUI ON)
+add_compile_definitions(ADD_IMGUI)
+
 if (EMSCRIPTEN)
     message("EMSCRIPTEN BUILD!!!")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}  -msimd128 -s TOTAL_MEMORY=67108864 -sUSE_SDL=3 -sUSE_SDL_MIXER=3 -s ASSERTIONS=1 -s WASM=1")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -msimd128 -s TOTAL_MEMORY=67108864 -sUSE_SDL=3 -sUSE_SDL_MIXER=3 -s ASSERTIONS=1 -s WASM=1")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -sUSE_PTHREADS -pthread -msimd128 -sUSE_SDL=3 -sUSE_SDL_MIXER=3")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -sUSE_PTHREADS -pthread -msimd128 -sUSE_SDL=3 -sUSE_SDL_MIXER=3")
 else ()
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
         set(CMAKE_CXX_FLAGS "-O3 -march=x86-64-v3")
@@ -28,6 +32,6 @@ else ()
     endif ()
 endif ()
 
-
 add_subdirectory(libs)
 add_subdirectory(src)
+

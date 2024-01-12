@@ -1,6 +1,15 @@
-add_executable(${PROJECT_NAME})
+set(EXECUTABLE_NAME ${PROJECT_NAME})
 
-target_sources(${PROJECT_NAME} PRIVATE
+if (ANDROID)
+	# The SDL java code is hardcoded to load libmain.so on android, so we need to change EXECUTABLE_NAME
+	set(EXECUTABLE_NAME main)
+	add_library(${EXECUTABLE_NAME} SHARED)
+else()
+	add_executable(${EXECUTABLE_NAME})
+endif()
+
+
+target_sources(${EXECUTABLE_NAME} PRIVATE
         components/aicontroller.h
         components/collision.h
         components/damage.h
@@ -59,7 +68,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 
 if (CMAKE_BUILD_TYPE STREQUAL Release)
     if (EMSCRIPTEN)
-        set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-g -s FORCE_FILESYSTEM=1 -s TOTAL_MEMORY=67108864 -sUSE_SDL=3 -sUSE_SDL_MIXER=3 -sSTACK_SIZE=5MB -s DEMANGLE_SUPPORT=1 -s EXPORTED_FUNCTIONS=\"[_malloc,_main]\" --shell-file ${CMAKE_SOURCE_DIR}/assets/shell.html --preload-file ${CMAKE_SOURCE_DIR}/assets/@assets --bind")
+        set_target_properties(${EXECUTABLE_NAME} PROPERTIES LINK_FLAGS "-pthread -sUSE_PTHREADS  -s PTHREAD_POOL_SIZE=2 -DMA_ENABLE_AUDIO_WORKLETS -sAUDIO_WORKLET=1 -sWASM_WORKERS=1 -sASYNCIFY -s FORCE_FILESYSTEM=1 -s TOTAL_MEMORY=67108864 -sUSE_SDL=3 -sUSE_SDL_MIXER=3 -sSTACK_SIZE=8MB -s DEMANGLE_SUPPORT=1 -s GL_ENABLE_GET_PROC_ADDRESS -s EXPORTED_FUNCTIONS=\"[_malloc,_main]\" --shell-file ${CMAKE_SOURCE_DIR}/assets/shell.html --preload-file ${CMAKE_SOURCE_DIR}/assets/@assets --bind")
         set(CMAKE_EXECUTABLE_SUFFIX ".html") # This line is used to set your executable to build with the emscripten html template so taht you can directly open it.
 
         set(OUTPUT_DIR "../../../bin/Emscripten")
@@ -77,15 +86,15 @@ if (NOT EMSCRIPTEN)
 endif ()
 
 
-set_target_properties(${PROJECT_NAME} PROPERTIES
-        OUTPUT_NAME ${PROJECT_NAME}
+set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        OUTPUT_NAME ${EXECUTABLE_NAME}
         ARCHIVE_OUTPUT_DIRECTORY ${OUTPUT_DIR}
         LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIR}
         RUNTIME_OUTPUT_DIRECTORY ${OUTPUT_DIR}
 )
 
-target_include_directories(${PROJECT_NAME} PRIVATE .)
-target_link_libraries(${PROJECT_NAME} PRIVATE libs)
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall)
-target_compile_options(${PROJECT_NAME} PRIVATE -Wno-unused-command-line-argument)
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
+target_include_directories(${EXECUTABLE_NAME} PRIVATE .)
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE libs)
+target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wall)
+target_compile_options(${EXECUTABLE_NAME} PRIVATE -Wno-unused-command-line-argument)
+target_compile_features(${EXECUTABLE_NAME} PRIVATE cxx_std_23)
