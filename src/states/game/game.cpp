@@ -77,9 +77,9 @@ void GameState::load()
 
     Fonts::GetFont("assets/fonts/APL386.ttf", 20);
 
-    Audio::getMusic("assets/music/boss-1-loop.wav");
-    Audio::getSound("assets/sfx/slowmo-enter.wav");
-    Audio::getSound("assets/sfx/slowmo-exit.wav");
+    Audio::GetMusic("assets/music/boss-1-loop.wav");
+    Audio::GetSound("assets/sfx/slowmo-enter.wav");
+    Audio::GetSound("assets/sfx/slowmo-exit.wav");
 
 	screenWidth = static_cast<float>(Window::GetWidth());
 	screenHeight = static_cast<float>(Window::GetHeight());
@@ -173,7 +173,7 @@ void GameState::draw()
 	if (World::getSlowMotionTimer() <= 1.1f)
 	{
 		if (World::getPlaySlowMotionExit()) {
-			//Audio::playSound("assets/sfx/slowmo-exit.wav");
+			//Audio::PlaySound("assets/sfx/slowmo-exit.wav");
 			World::setPlaySlowMotionExit(false);
 		}
 	}

@@ -7,10 +7,10 @@
 void MenuState::load()
 {
 
-//	Audio::getMusic("assets/music/menu.mp3");
+	Audio::GetMusic("assets/music/menu.mp3");
 //
-//	Audio::getSound("assets/sfx/cursor.wav");
-//	Audio::getSound("assets/sfx/confirm.wav");
+	Audio::GetSound("assets/sfx/cursor.wav");
+	Audio::GetSound("assets/sfx/confirm.wav");
 
 	mo["main"].SetTable(1, 6);
 	mo["main"]["Start game"].setCallback([&]() { State::SetState("game"); });
@@ -69,7 +69,7 @@ void MenuState::load()
 
     mm.Open(&mo["main"]);
 
-    //Audio::playMusic("assets/music/menu.mp3");
+    Audio::PlayMusic("assets/music/menu.mp3");
 
 
 
@@ -77,14 +77,14 @@ void MenuState::load()
 
 void MenuState::unload()
 {
-	//StopSoundMulti();
+	Audio::StopMusic();
 
 }
 
 void MenuState::draw()
 {
-//	if (!Audio::isMusicPlaying()) {
-//		Audio::playMusic("assets/music/menu.mp3");
+//	if (!Audio::IsMusicPlaying()) {
+//		Audio::PlayMusic("assets/music/menu.mp3");
 //	}
 
 	const int leftMargin = Window::GetWidth() / 10;
@@ -102,12 +102,12 @@ void MenuState::draw()
 
 	for (auto& input : inputs)
 	{
-		if (input->is(Buttons::UP,     Action::PRESSED)) { /* Audio::playSound("assets/sfx/cursor.wav"); */  mm.OnUp(); }
-		if (input->is(Buttons::DOWN,   Action::PRESSED)) { /* Audio::playSound("assets/sfx/cursor.wav"); */  mm.OnDown(); }
-		if (input->is(Buttons::LEFT,   Action::PRESSED)) { /* Audio::playSound("assets/sfx/cursor.wav"); */  doVolume = true; }
-		if (input->is(Buttons::RIGHT,  Action::PRESSED)) { /* Audio::playSound("assets/sfx/cursor.wav"); */  doVolume = true; }
-		if (input->is(Buttons::ACCEPT, Action::PRESSED)) { /* Audio::playSound("assets/sfx/confirm.wav"); */ command = mm.OnConfirm(); }
-		if (input->is(Buttons::BACK,   Action::PRESSED)) { /* Audio::playSound("assets/sfx/cursor.wav"); */  mm.OnBack(); }
+		if (input->is(Buttons::UP,     Action::PRESSED)) { Audio::PlaySound("assets/sfx/cursor.wav");  mm.OnUp(); }
+		if (input->is(Buttons::DOWN,   Action::PRESSED)) { Audio::PlaySound("assets/sfx/cursor.wav");  mm.OnDown(); }
+		if (input->is(Buttons::LEFT,   Action::PRESSED)) { Audio::PlaySound("assets/sfx/cursor.wav");  doVolume = true; }
+		if (input->is(Buttons::RIGHT,  Action::PRESSED)) { Audio::PlaySound("assets/sfx/cursor.wav");  doVolume = true; }
+		if (input->is(Buttons::ACCEPT, Action::PRESSED)) { Audio::PlaySound("assets/sfx/confirm.wav"); command = mm.OnConfirm(); }
+		if (input->is(Buttons::BACK,   Action::PRESSED)) { Audio::PlaySound("assets/sfx/cursor.wav");  mm.OnBack(); }
 
 		volumeModifier = input->is(Buttons::LEFT, Action::PRESSED) ? -0.05f : 0.05f;
 	}

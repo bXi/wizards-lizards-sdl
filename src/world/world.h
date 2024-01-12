@@ -176,7 +176,7 @@ public:
     static void startSlowMotion()
     {
         if (!get().slowMotionLerp->started) {
-            //Audio::playSound("assets/sfx/slowmo-enter.wav");
+            //Audio::PlaySound("assets/sfx/slowmo-enter.wav");
             get().playSlowMotionExit = true;
             get().slowMotionTimer = 3.0f;
             get().slowMotionLerp->started = true;
