@@ -13,9 +13,9 @@ class LevelManager
 {
 private:
 	Texture finalTexture;
-	Image dungeonTileset;
+	Texture dungeonTileset;
 
-	Image finalTextureImage;
+	Texture finalTextureImage;
 public:
 
 
@@ -28,7 +28,7 @@ public:
 	Dungeon getBossRoom();
 	Dungeon getTestRoom();
 	Texture drawLevel();
-	void renderRow(int start, int rows, Dungeon dungeon, Image finalTextureImage, Image dungeonTileset);
+	void renderRow(int start, int rows, Dungeon dungeon, Texture finalTextureImage, Texture dungeonTileset);
 
 	std::vector<Room*> rooms;
 

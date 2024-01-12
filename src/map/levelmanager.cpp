@@ -43,7 +43,7 @@ Dungeon LevelManager::getTestRoom()
 
 
 
-void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, Image _finalTextureImage, const Image _dungeonTileset)
+void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, Texture _finalTextureImage, const Texture _dungeonTileset)
 {
 
 	[[maybe_unused]] constexpr char FLOOR = ' ';
@@ -65,7 +65,7 @@ void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, 
 		return getRectangle(tileId % 16, tileId / 16);
 	};
 
-	auto drawToMap = [&](Image* _tex, const Image(_tileset), const Rectangle tile, const Rectangle dest, Color color)
+	auto drawToMap = [&](Texture* _tex, const Texture(_tileset), const Rectangle tile, const Rectangle dest, Color color)
 	{
 		//std::lock_guard<std::mutex> guard(_tex_mutex);
 		//ImageDraw(_tex, _tileset, tile, dest, color);
