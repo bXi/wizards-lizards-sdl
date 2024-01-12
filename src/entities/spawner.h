@@ -15,8 +15,6 @@ class Player;
 
 
 class Spawner {
-private:
-	Lizard *lizard = nullptr;
 
 public:
 
