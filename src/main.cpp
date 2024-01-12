@@ -17,7 +17,7 @@ static void mainloop()
         exit(0);
         #endif
     }
-
+    Audio::UpdateMusicStreams();
     Window::StartFrame();
 
     State::Draw();
@@ -28,9 +28,11 @@ static void mainloop()
 
 int main(int argc, char* argv[])
 {
-    Audio::Init();
     Window::InitWindow("Wizards & Lizards", 1280, 720);
+    Audio::Init();
+
 	Input::Init();
+	ECS::init();
 
     BaseState* testState = new TestState;
     State::AddState("test", testState);
@@ -41,14 +43,14 @@ int main(int argc, char* argv[])
     BaseState* gameState = new GameState;
     State::AddState("game", gameState);
 
-    State::Init("game");
+    State::Init("menu");
 
-	ECS::init();
+
 
     #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(mainloop, 0, 1);
+    emscripten_set_main_loop(mainloop, 60, 1);
     #else
-    while (1) { mainloop(); }
+    while (true) { mainloop(); }
     #endif
 
 	return 0;
