@@ -10,9 +10,6 @@
 
 class MenuState : public BaseState {
 private:
-	int menuChoice = 0;
-	int subMenuChoice = 0;
-
 	menuobject mo;
 	menumanager mm;
 
