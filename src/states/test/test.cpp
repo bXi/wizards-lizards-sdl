@@ -744,7 +744,7 @@ void TestState::draw()
 		{
 			// Find closest
 			ray_stop = true;
-			size_t closest_hit_index = -1;
+			int closest_hit_index = -1;
 			float fClosestDistance = 10000000.0f;
 
 			for (size_t i = 0; i < vecShapes.size(); i++)

@@ -1028,10 +1028,14 @@ namespace olc::utils::geom2d
 	// contains(r,p)
 	// Checks if rectangle contains point
 	template<typename T1, typename T2>
-	inline constexpr bool contains(const rect<T1>& r, const olc::v_2d<T2>& p)
+	inline constexpr bool contains(const rect<T1>& r, const typename olc::v_2d<T2>& p)
 	{
-		return !(p.x < r.pos.x || p.y < r.pos.y ||
-			p.x > (r.pos.x + r.size.x) || p.y > (r.pos.y + r.size.y));
+        using XType = decltype(r.pos.x);
+        using YType = decltype(r.pos.y);
+
+        return !(p.x < static_cast<XType>(r.pos.x) || p.y < static_cast<YType>(r.pos.y) ||
+                 p.x > static_cast<XType>(r.pos.x + r.size.x) || p.y > static_cast<YType>(r.pos.y + r.size.y));
+
 	}
 
 	// contains(c,p)
