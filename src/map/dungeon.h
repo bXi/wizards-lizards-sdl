@@ -9,6 +9,8 @@
 #include "utils/vectors.h"
 #include "utils/colors.h"
 
+#include "utils/helpers.h"
+
 struct Position {
     int x, y;
 };
