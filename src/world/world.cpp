@@ -38,7 +38,7 @@ void PhysicsWall::draw()
     return;
 
     auto origin = (vf2d)HalfSize * vi2d(Configuration::tileWidth, Configuration::tileHeight);
-    Rectangle rec = { RigidBody->GetPosition().x * Configuration::tileWidth,RigidBody->GetPosition().y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
+    Rectangle rec = {RigidBody->GetPosition().x * Configuration::tileWidth, RigidBody->GetPosition().y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
 
     vf2d pos = vf2d{rec.x, rec.y} + origin;
     Render2D::DrawRectangle(pos, {rec.width, rec.height}, ShapeColor);

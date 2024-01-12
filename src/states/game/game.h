@@ -93,7 +93,7 @@ public:
 
     Rectangle getRectangle(int _x, int _y)
 	{
-		const Rectangle rect = { static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight),  static_cast<float>(Configuration::tileWidth),  static_cast<float>(Configuration::tileHeight) };
+		const Rectangle rect = {static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
 		return rect;
 	};
 

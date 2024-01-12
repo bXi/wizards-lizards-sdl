@@ -51,8 +51,6 @@ int main(int argc, char* argv[])
     while (1) { mainloop(); }
     #endif
 
-
-
 	return 0;
 }
 
