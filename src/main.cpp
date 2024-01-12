@@ -22,7 +22,6 @@ static void mainloop()
 
     State::Draw();
 
-    Helpers::DrawMainMenu();
     Window::EndFrame();
 
 }

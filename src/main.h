@@ -8,8 +8,7 @@
 
 #include "ecs.h"
 
-#ifndef __EMSCRIPTEN__
-
+#ifdef ADD_IMGUI
 #include "imgui.h"
 #endif
 
