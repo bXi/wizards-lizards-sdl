@@ -276,21 +276,21 @@ void WizardClass::shoot(flecs::entity entity)
 
 			float radius = edge.radius * 32.0f;
 
-			Render2D::DrawCircleSectorFilled(start, radius, startAngle, endAngle, 32, laserBeam);
-			Render2D::DrawCircleSectorFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
-			Render2D::DrawLine(start, end, radius * 2.0f, laserBeam);
+			Render2D::DrawArcFilled(start, radius, startAngle, endAngle, 32, laserBeam);
+			Render2D::DrawArcFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
+			Render2D::DrawThickLine(start, end, laserBeam, radius * 2.0f);
 
 			radius /= 2.5f;
 
-			Render2D::DrawCircleSectorFilled(start, radius, startAngle, endAngle, 32, laserBeam);
-			Render2D::DrawCircleSectorFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
-			Render2D::DrawLine(start, end, radius * 2.0f, laserBeam);
+			Render2D::DrawArcFilled(start, radius, startAngle, endAngle, 32, laserBeam);
+			Render2D::DrawArcFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
+			Render2D::DrawThickLine(start, end, laserBeam, radius * 2.0f);
 
 			radius /= 3.0f;
 
-			Render2D::DrawCircleSectorFilled(start, radius, startAngle, endAngle, 32, laserBeam);
-			Render2D::DrawCircleSectorFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
-			Render2D::DrawLine(start, end, radius * 2.0f, { 255,100,100,25 });
+			Render2D::DrawArcFilled(start, radius, startAngle, endAngle, 32, laserBeam);
+			Render2D::DrawArcFilled(end, radius, endAngle + 180.0f, startAngle + 180.0f, 32, laserBeam);
+			Render2D::DrawThickLine(start, end, { 255,100,100,25 }, radius * 2.0f);
 		}
 		if (laserLastDamageTick <= 0.0f) {
 			for (auto& edge : vecLines) {
