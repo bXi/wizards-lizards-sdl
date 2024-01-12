@@ -15,10 +15,10 @@ b2World World(Gravity);
 
 void TestState::load()
 {
-	Audio::getMusic("assets/music/menu.mp3");
+    Audio::GetMusic("assets/music/menu.mp3");
 
-	Audio::getSound("assets/sfx/slowmo-enter.wav");
-	Audio::getSound("assets/sfx/cursor.wav");
+    Audio::GetSound("assets/sfx/slowmo-enter.wav");
+    Audio::GetSound("assets/sfx/cursor.wav");
     dungeonTileset = Textures::GetTexture("assets/tilesets/dungeon.png");
 
 	//Lerp test
@@ -42,13 +42,36 @@ void TestState::load()
 	Objects.push_back(new BoxObject(vf2d{ -20,-60 }, vf2d{ 8,12 }, BLUE, -30));
 
 	Camera::SetTarget({((float)(Window::GetWidth() - 300) / 2.0f) + 300 , (float)(Window::GetHeight() - 20)});
-    Camera::SetScale(4.f);
+    //Camera::SetScale(4.f);
 
 	//ground = BoxObject({ 0, 0 }, { 200, 2 }, BROWN, 0, false);
+
+
+
+
+
+
+    vecShapes.push_back({ Point{ { { 550.0f, 10.0f } } } });
+
+		vecShapes.push_back({ Line{ { { 320.0f, 10.0f }, {350.0f, 70.0f} } } });
+		vecShapes.push_back({ Line{ { { 380.0f, 10.0f }, {310.0f, 20.0f} } } });
+
+		vecShapes.push_back({ Rect{ { { 380.0f, 10.0f }, {410.0f, 60.0f} } } });
+
+		vecShapes.push_back({ Circle{ { { 430.0f, 20.0f }, {470.0f, 20.0f} } } });
+		vecShapes.push_back({ Circle{ { { 630.0f, 300.0f }, {720.0f, 300.0f} } } });
+		vecShapes.push_back({ Circle{ { { 630.0f, 300.0f }, {700.0f, 300.0f} } } });
+
+		vecShapes.push_back({ Triangle{{ {350.0f, 100.0f}, {310.0f, 150.0f}, {390.0f, 150.0f}} }});
+		vecShapes.push_back({ Triangle{{ {650.0f, 200.0f}, {800.0f, 150.0f}, {750.0f, 400.0f}} }});
+
+
+
 }
 
 void TestState::unload()
 {
+    Audio::StopMusic();
 }
 
 void TestState::draw()
@@ -76,7 +99,7 @@ void TestState::draw()
             y += 24;
 		}
 
-		Render2D::DrawLine({maxWidth + 40.f, 0}, {maxWidth + 40.f, (float)Window::GetHeight()}, 1.0f, WHITE);
+		Render2D::DrawLine({maxWidth + 40.f, 0}, {maxWidth + 40.f, (float)Window::GetHeight()}, WHITE);
 	}
 	for (const auto &key : keys)
 	{
@@ -108,7 +131,7 @@ void TestState::draw()
 			}
 		}
 
-		const Rectangle rect = { 0.0f, 0.0f, static_cast<float>(size), static_cast<float>(size) };
+		const Rectangle rect = {0.0f, 0.0f, static_cast<float>(size), static_cast<float>(size) };
 
 		QuadTree quadtree = QuadTree(rect);
 
@@ -179,20 +202,20 @@ void TestState::draw()
 	{
 		if (Input::KeyPressed(SDLK_a))
 		{
-			Audio::playSound("assets/sfx/cursor.wav");
+            Audio::PlaySound("assets/sfx/cursor.wav");
 		}
 		if (Input::KeyPressed(SDLK_s))
 		{
-			Audio::playSound("assets/sfx/slowmo-enter.wav");
+            Audio::PlaySound("assets/sfx/slowmo-enter.wav");
 		}
 		if (Input::KeyPressed(SDLK_d))
 		{
-			if (Audio::isMusicPlaying())
+			if (Audio::IsMusicPlaying())
 			{
-				Audio::stopMusic();
+                Audio::StopMusic();
 			} else
 			{
-				Audio::playMusic("assets/music/menu.mp3");
+                Audio::PlayMusic("assets/music/menu.mp3");
 			}
 		}
 	} break;
@@ -360,7 +383,7 @@ void TestState::draw()
 					Render2D::DrawCircleFilled(firstPoint + drawOffset, 3, PINK);
 					Render2D::DrawCircleFilled(secondPoint + drawOffset, 3, LIME);
 
-					Render2D::DrawLine(firstPoint + drawOffset, secondPoint + drawOffset, 1.f, YELLOW);
+					Render2D::DrawLine(firstPoint + drawOffset, secondPoint + drawOffset, YELLOW);
 
 				}
 			}
@@ -373,7 +396,7 @@ void TestState::draw()
 
 		const vf2d drawOffset = { 400.0f, 50.0f };
 
-		Rectangle rect = { 100.0f, 100.0f, 400.0f, 400.0f };
+		Rectangle rect = {100.0f, 100.0f, 400.0f, 400.0f };
 		vf2d lineStart = { 300.0f, 300.0f };
 		vf2d lineEnd = Input::GetMousePosition();
 		lineEnd -= drawOffset;
@@ -396,7 +419,7 @@ void TestState::draw()
 
 		//Render2D::DrawLine(lineStart + drawOffset, lineEnd + drawOffset, lineColor);
 
-        Render2D::DrawLine(lineStart + drawOffset, lineEnd + drawOffset, 1.0f, lineColor);
+        Render2D::DrawLine(lineStart + drawOffset, lineEnd + drawOffset, lineColor);
 
 	} break;
 	case Test::Box2D: {
@@ -477,8 +500,8 @@ void TestState::draw()
 
 
 		// and some axes
-		Render2D::DrawLine({0, 0}, {100, 0}, 1.0f, RED);
-		Render2D::DrawLine({0, 0}, {0, -100}, 1.0f, BLUE);
+		Render2D::DrawLine({0, 0}, {100, 0}, RED);
+		Render2D::DrawLine({0, 0}, {0, -100}, BLUE);
 
 		ground.draw();
 
@@ -491,6 +514,29 @@ void TestState::draw()
 
 		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {maxWidth + 60.f, 10.f}, "Left Click to add a ball - Right Click to add a box",  WHITE);
 	} break;
+    case Test::Render2D:{
+
+        Render2D::DrawLine({300.f, 20.f}, {350.f, 30.f}, WHITE);
+        Render2D::DrawThickLine({400.f, 20.f}, {450.f, 30.f}, WHITE, 3.f);
+
+
+        Render2D::DrawCircle({350.f, 100.f}, 40.f, WHITE);
+        Render2D::DrawCircleFilled({500.f, 100.f}, 40.f, WHITE);
+
+        Render2D::DrawEllipse({350.f, 200.f}, 40.f, 25.f, WHITE);
+        Render2D::DrawEllipseFilled({500.f, 200.f}, 40.f, 25.f, WHITE);
+
+        vf2d v1 = {40.f, 0.f};
+        vf2d v2 = {0.f, 80.f};
+        vf2d v3 = {80.f, 80.f};
+        Render2D::DrawTriangle(v1 + vf2d(300.f, 300.f), v2 + vf2d(300.f, 300.f), v3 + vf2d(300.f, 300.f), WHITE);
+        Render2D::DrawTriangleFilled(v1 + vf2d(450.5, 300.f), v2 + vf2d(450.5, 300.f), v3 + vf2d(450.5, 300.f), WHITE);
+
+        Render2D::DrawRectangle({300.f, 400.f}, {80.f,80.f}, WHITE);
+        Render2D::DrawRectangleFilled({450.f, 400.f}, {80.f,80.f}, WHITE);
+
+
+    } break;
 	case Test::Random:{
 
         Rectangle destRect = {
@@ -526,6 +572,10 @@ void TestState::draw()
 
         Fonts::DrawText("assets/fonts/APL386.ttf", 20, {600.f, 250.f}, Helpers::TextFormat("%f", testPercentage), WHITE);
 
+
+
+
+
         if (Input::KeyPressed(SDLK_s)) {
 
             Font font = Fonts::GetFont("assets/fonts/Rosarivo-Regular.ttf", 144);
@@ -559,14 +609,183 @@ void TestState::draw()
         }
 
 
+
+    } break;
+    case Test::J9X_Geom: {
+        olc::vf2d vMouseDelta = olc::vf2d(Input::GetMousePosition().x, Input::GetMousePosition().y) - vOldMousePos;
+		vOldMousePos = {(int)Input::GetMousePosition().x, (int)Input::GetMousePosition().y};
+
+		if (Input::MouseButtonReleased(SDL_BUTTON_LEFT))
+			nSelectedShapeIndex = -1;
+
+		// Check for mouse hovered shapes
+		ShapeWrap mouse{ Point{olc::vf2d(Input::GetMousePosition().x, Input::GetMousePosition().y)} };
+
+
+		if (nSelectedShapeIndex < vecShapes.size() && Input::MouseButtonDown(SDL_BUTTON_LEFT))
+		{
+			// Visit the selected shape and offset.
+			std::visit([&](auto& shape)
+			{
+				for (auto& p : shape.points)
+				{
+					p += vMouseDelta;
+				}
+			}, vecShapes[nSelectedShapeIndex]);
+		}
+
+		size_t nMouseIndex = 0;
+		for (const auto& shape : vecShapes)
+		{
+			if (CheckContains(shape, mouse))
+			{
+				break;
+			}
+
+			nMouseIndex++;
+		}
+
+		if (nMouseIndex < vecShapes.size() && Input::MouseButtonPressed(SDL_BUTTON_LEFT))
+			nSelectedShapeIndex = nMouseIndex;
+
+		// Check Contains
+		std::vector<size_t> vContains;
+		std::vector<size_t> vOverlaps;
+		std::vector<olc::vf2d> vIntersections;
+		if (nSelectedShapeIndex < vecShapes.size())
+		{
+			for (size_t i = 0; i < vecShapes.size(); i++)
+			{
+				if (i == nSelectedShapeIndex) continue; // No self check
+
+				const auto& vTargetShape = vecShapes[i];
+
+				const auto vPoints = CheckIntersects(vecShapes[nSelectedShapeIndex], vTargetShape);
+				vIntersections.insert(vIntersections.end(), vPoints.begin(), vPoints.end());
+
+				if(CheckContains(vecShapes[nSelectedShapeIndex], vTargetShape))
+					vContains.push_back(i);
+
+				if (CheckOverlaps(vecShapes[nSelectedShapeIndex], vTargetShape))
+					vOverlaps.push_back(i);
+			}
+		}
+
+
+		ShapeWrap  ray1, ray2;
+
+
+
+		bool bRayMode = false;
+		if (Input::MouseButtonDown(SDL_BUTTON_RIGHT))
+		{
+			// Enable Ray Mode
+			bRayMode = true;
+
+			ray1 = { Ray{{ { 10.0f, 10.0f }, olc::vf2d(Input::GetMousePosition().x, Input::GetMousePosition().y)} }};
+			ray2 = { Ray{{ { float(Window::GetWidth() - 10), 10.0f }, olc::vf2d(Input::GetMousePosition().x, Input::GetMousePosition().y)} }};
+
+
+			for (size_t i = 0; i < vecShapes.size(); i++)
+			{
+				const auto& vTargetShape = vecShapes[i];
+
+				const auto vPoints1 = CheckIntersects(ray1, vTargetShape);
+				vIntersections.insert(vIntersections.end(), vPoints1.begin(), vPoints1.end());
+
+				const auto vPoints2 = CheckIntersects(ray2, vTargetShape);
+				vIntersections.insert(vIntersections.end(), vPoints2.begin(), vPoints2.end());
+
+			}
+
+			const auto vPoints3 = CheckIntersects(ray2, ray1);
+			vIntersections.insert(vIntersections.end(), vPoints3.begin(), vPoints3.end());
+
+
+		}
+
+		// Draw All Shapes
+		for (const auto& shape : vecShapes)
+			DrawShape(shape);
+
+
+		// Draw Overlaps
+		for (const auto& shape_idx : vOverlaps)
+			DrawShape(vecShapes[shape_idx], YELLOW);
+
+		// Draw Contains
+		for (const auto& shape_idx : vContains)
+			DrawShape(vecShapes[shape_idx], PURPLE);
+
+		// Draw Manipulated Shape
+		if(nSelectedShapeIndex < vecShapes.size())
+			DrawShape(vecShapes[nSelectedShapeIndex], GREEN);
+
+		// Draw Intersections
+		for (const auto& intersection : vIntersections)
+			Render2D::DrawCircleFilled({intersection.x, intersection.y}, 3.f, RED);
+
+		if (bRayMode)
+		{
+			DrawShape(ray1, BLUE);
+			DrawShape(ray2, BLUE);
+		}
+
+		// Laser beam
+		ray<float> ray_laser{ {10.0f, 300.0f}, {1.0f, 0.0f} };
+		bool ray_stop = false;
+		int nBounces = 100;
+		size_t last_hit_index = -1;
+
+
+		ray<float> ray_reflected;
+
+		while (!ray_stop && nBounces > 0)
+		{
+			// Find closest
+			ray_stop = true;
+			size_t closest_hit_index = -1;
+			float fClosestDistance = 10000000.0f;
+
+			for (size_t i = 0; i < vecShapes.size(); i++)
+			{
+				// Dont check against origin shape
+				if (i == last_hit_index) continue;
+
+				const auto& vTargetShape = vecShapes[i];
+				auto hit = CheckReflect(ray_laser, vTargetShape);
+				if (hit.has_value())
+				{
+					float d = (ray_laser.origin - hit.value().origin).mag();
+					if (d < fClosestDistance)
+					{
+						fClosestDistance = d;
+						closest_hit_index = i;
+						ray_reflected = hit.value();
+					}
+				}
+			}
+
+			if (closest_hit_index != -1)
+			{
+				Render2D::DrawLine({ray_laser.origin.x, ray_laser.origin.y} , {ray_reflected.origin.x, ray_reflected.origin.y} , Color(rand() % 155 + 100, 0, 0, 255));
+				ray_laser = ray_reflected;
+				ray_stop = false;
+				last_hit_index = closest_hit_index;
+				nBounces--;
+			}
+
+			if (ray_stop)
+			{
+				// Ray didnt hit anything
+				nBounces = 0;
+                auto target = ray_laser.origin + ray_laser.direction * 1000.0f;
+				Render2D::DrawLine({ray_laser.origin.x, ray_laser.origin.y}, {target.x, target.y}, Color(rand() % 155 + 100, 0, 0, 255));
+			}
+		}
+
     } break;
 	}
-
-	
-	
-
-
-
 }
 
 void TestState::customDrawGrid(int slices, float spacing)
