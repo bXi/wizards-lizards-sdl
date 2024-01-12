@@ -48,6 +48,8 @@ public:
 	{
         Render2D::DrawTexture(sprite, pos * width, {width, height});
 
+        if (spawnTimer < 0.f) spawnTimer = 0.f;
+
 		UI::drawSmallBar(pos, {1, 2}, 28, 6, BLUE, spawnTimer / timeTillNextSpawn);
 		UI::drawSmallBar(pos, {1, 12}, 28, 6, GREEN, static_cast<float>(spawnsLeft) / static_cast<float>(maxSpawns));
 	}
