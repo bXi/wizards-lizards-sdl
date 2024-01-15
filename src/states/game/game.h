@@ -18,6 +18,7 @@
 
 #include "entities/player.h"
 #include "entities/lizard.h"
+#include "entities/gate.h"
 
 #include "world/world.h"
 #include "map/room.h"
