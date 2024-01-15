@@ -3,6 +3,7 @@
 #include "rigidbody2d.h"
 #include "sprite.h"
 #include "playerclass.h"
+#include "renderframe.h"
 #include "configuration/configuration.h"
 #include "texture/texturehandler.h"
 #include "utils/vectors.h"
@@ -27,7 +28,12 @@ void Render2DComp::draw(flecs::entity* entity)
 
 			renderFrame = playerClass->getRenderFrame(entity);
 
-		}
+		} else if (entity->has<RenderFrame>())
+        {
+            auto* renderFrameComp = entity->get_mut<RenderFrame>();
+
+			renderFrame = renderFrameComp->RenderFrameNumber;
+        }
 
 		/*if (hitTimer > 0.0f) {
 			renderFrame = 24;

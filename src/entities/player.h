@@ -9,6 +9,7 @@
 #include "components/playerclass.h"
 #include "components/render2d.h"
 #include "components/playerinput.h"
+#include "components/renderframe.h"
 
 
 void CreatePlayerEntity(int index, vf2d pos);
