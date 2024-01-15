@@ -318,9 +318,11 @@ void World::BeginContact(b2Contact* contact)
         flecs::entity* player;
         flecs::entity* fireball;
         flecs::entity* enemy;
+        flecs::entity* other;
 
         bool doFireball = false;
         bool doPlayerHit = false;
+        bool doDeleteBulletsOnHit = false;
 
         // Perform collision handling based on the entity types
         if (entityA.has<EnemyEntity>() && entityB.has<FireballEntity>()) {
@@ -343,16 +345,32 @@ void World::BeginContact(b2Contact* contact)
             player = &entityB;
             doPlayerHit = true;
         }
+        else if (entityA.has<FireballEntity>()) {
+            fireball = &entityA;
+            other = &entityB;
+            doDeleteBulletsOnHit = true;
+        }
+        else if (entityB.has<FireballEntity>()) {
+            fireball = &entityB;
+            other = &entityA;
+            doDeleteBulletsOnHit = true;
+        }
+
+
 
 
         if (doFireball && enemy) {
             flecs::entity owner = ECS::getWorld().entity(fireball->get<Owner>()->owner_id);
-
         	owner.get_mut<PlayerClass>()->doDamage(enemy, 1);
-
         	fireball->set<DeleteMe>({});
-
             enemy->get_mut<Health>()->currentHealth -= 10.f;
+        }
+
+
+
+
+        if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>()) {
+            fireball->set<DeleteMe>({});
         }
 
         if (doPlayerHit && enemy) {

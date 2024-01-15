@@ -11,6 +11,7 @@
 #include "map/room.h"
 #include "flecs.h"
 #include "components/type.h"
+#include "components/deletebulletsonhit.h"
 #include "map/dungeon.h"
 
 class PhysicsWall : public PhysicsObject
