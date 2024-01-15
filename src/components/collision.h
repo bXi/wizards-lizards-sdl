@@ -23,14 +23,14 @@ struct Collision
 		auto* rigidBody = entity->get_mut<RigidBody2D>()->RigidBody;
 
 
-		b2Filter fireballFilter;
-		fireballFilter.categoryBits = category;
-		fireballFilter.maskBits = mask;
+		b2Filter filter;
+		filter.categoryBits = category;
+		filter.maskBits = mask;
 
-		// Set the collision filtering for all fireball fixtures
+		// Set the collision filtering for all fixtures
 		b2Fixture* fixture = rigidBody->GetFixtureList();
 		while (fixture != nullptr) {
-			fixture->SetFilterData(fireballFilter);
+			fixture->SetFilterData(filter);
 			fixture = fixture->GetNext();
 		}
 	}
