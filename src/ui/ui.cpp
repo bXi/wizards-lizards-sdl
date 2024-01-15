@@ -250,6 +250,10 @@ void UI::DrawMiniMap(Texture texture) {
             bgColor = {115, 21, 27, 255};
         }
 
+        if (room->specialRoom) {
+            bgColor = PURPLE;
+        }
+
         Render2D::DrawRectangleFilled({(float)miniMapX, (float)miniMapY + 1.f},
                                 {(float)miniMapWidth, (float)miniMapHeight},
                       bgColor);
