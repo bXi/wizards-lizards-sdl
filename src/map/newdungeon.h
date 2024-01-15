@@ -14,6 +14,7 @@
 #include "utils/vectors.h"
 
 #include "room.h"
+#include "tile.h"
 
 class DungeonGen
 {
@@ -73,8 +74,9 @@ private:
     void findLongestPath();
     bool isPositionValid(const vi2d& position, const vi2d& size);
     void updateRoomExits(Room* room, const vi2d& neighborPos);
-    void addRoom(Room* room, bool generateRandomPosition = false);
+    void addRoom(Room* room);
     void generateMst();
     void connectRooms();
+    void upgradeRooms();
     void connectTwoRooms(Room* room1, Room* room2);
 };

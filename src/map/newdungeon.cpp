@@ -175,20 +175,33 @@ void DungeonGen::generateLayout()
 
     generateMst();
     findLongestPath();
-
+    upgradeRooms();
     connectRooms();
 
 }
 
-void DungeonGen::findLongestPath()
-{
-    for (const auto& room : rooms) room->connectedRooms.clear();
+void DungeonGen::upgradeRooms() {
+    for (auto& room : rooms) {
+        if (room->size == vi2d(1,1) && (!room->start && !room->end) && std::rand() % 100 > 50) {
+
+            Room* testRoom = new TestPuzzleRoom("Test puzzle", room->size);
+            testRoom->id = room->id;
+            testRoom->pos = room->pos;
+
+            room = testRoom;
+        }
+
+    }
+}
+
+void DungeonGen::findLongestPath() {
+    for (const auto &room: rooms) room->connectedRooms.clear();
     leafs.clear();
 
     auto g = new DungeonGraph();
     g->resize(static_cast<int>(rooms.size()));
 
-    for (auto& edge : edges) {
+    for (auto &edge: edges) {
         const auto firstRoom = getRoomById(edge.first.first);
         const auto secondRoom = getRoomById(edge.first.second);
 
@@ -198,7 +211,7 @@ void DungeonGen::findLongestPath()
         g->add_edge(firstRoom->id, secondRoom->id);
     }
 
-    for (const auto& room : rooms) {
+    for (const auto &room: rooms) {
         if (room->connectedRooms.size() == 1) {
             leafs.push_back(room);
         }
@@ -207,8 +220,8 @@ void DungeonGen::findLongestPath()
     int maxFoundLength = 0;
     std::vector<int> foundPath;
 
-    for (const auto& roomEnd : leafs) {
-        for (const auto& roomStart : leafs) {
+    for (const auto &roomEnd: leafs) {
+        for (const auto &roomStart: leafs) {
             if (roomStart->id != roomEnd->id) {
                 auto path = g->printShortestDistance(roomStart->id, roomEnd->id, static_cast<int>(rooms.size()));
 
@@ -219,37 +232,6 @@ void DungeonGen::findLongestPath()
             }
         }
     }
-    /*
-    for (const auto& roomEnd : rooms) {
-        for (const auto& roomStart : rooms) {
-            if (roomStart->id != roomEnd->id) {
-                auto path = g->printShortestDistance(roomStart->id, roomEnd->id, static_cast<int>(rooms.size()));
-                float d = Vector2Distance(roomStart->pos, roomEnd->pos);
-                if (static_cast<int>(path.size()) < 8 && Helpers::GetRandomValue(0, 100) < 15 && d < 100.0f) {
-
-                    bool intersects = false;
-
-                    for (const auto& edge : edges) {
-                        const auto firstRoom = getRoomById(edge.first.first);
-                        const auto secondRoom = getRoomById(edge.first.second);
-
-                        if (firstRoom->id == roomStart->id || secondRoom->id == roomStart->id || firstRoom->id == roomEnd->id || secondRoom->id == roomEnd->id) continue;
-
-                        Vector2 notUsed;
-                        if (CheckCollisionLines(roomStart->pos, roomEnd->pos, firstRoom->pos, secondRoom->pos, &notUsed)) {
-                            intersects = true;
-                            break;
-                        }
-                    }
-
-                    if (!intersects)
-                        edges.push_back({ { roomStart->id, roomEnd->id }, d });
-                }
-            }
-        }
-    }
-    */
-
 
     g->clear();
     delete g;
@@ -260,15 +242,15 @@ void DungeonGen::findLongestPath()
     //bool doneEnd = false;
 
     int j = 0;
-    for (const auto& roomId : foundPath) {
+    for (const auto &roomId: foundPath) {
         const auto room = getRoomById(roomId);
-        if (!doneStart && start == j && room->size == vi2d(1, 1)) {
+        if (!doneStart && start == j && room->size == vi2d(1, 1) && !room->specialRoom) {
             room->start = true;
             room->name = "Start";
             room->canHaveSpawners = false;
             doneStart = true;
         }
-        if (room->size == vi2d(1, 1) && j >= maxFoundLength - 4) {
+        if (room->size == vi2d(1, 1) && j >= maxFoundLength - 4 && !room->specialRoom) {
             room->end = true;
             room->name = "End";
             room->canHaveSpawners = false;
@@ -279,11 +261,11 @@ void DungeonGen::findLongestPath()
     }
 
     if (!doneStart) {
-       // int j = 0;
+        // int j = 0;
         for (int k = 4; k >= 0; k--) {
-            for (const auto& roomId : foundPath) {
+            for (const auto &roomId: foundPath) {
                 const auto room = getRoomById(roomId);
-                if (!doneStart && start == k && room->size == vi2d(1, 1)) {
+                if (!doneStart && start == k && room->size == vi2d(1, 1) && !room->specialRoom) {
                     room->start = true;
                     room->name = "Start";
                     room->canHaveSpawners = false;
@@ -294,12 +276,9 @@ void DungeonGen::findLongestPath()
         }
     }
     foundPath.clear();
-
-
 }
 
-bool DungeonGen::isPositionValid(const vi2d& position, const vi2d& size)
-{
+bool DungeonGen::isPositionValid(const vi2d &position, const vi2d &size) {
     for (int x = position.x - 1; x < position.x + size.x + 1; ++x) {
         for (int y = position.y - 1; y < position.y + size.y + 1; ++y) {
             if (x < 0 || x >= width || y < 0 || y >= height) {
@@ -317,45 +296,23 @@ bool DungeonGen::isPositionValid(const vi2d& position, const vi2d& size)
     return true;
 }
 
-void DungeonGen::updateRoomExits(Room* room, const vi2d& neighborPos)
-{
+void DungeonGen::updateRoomExits(Room *room, const vi2d &neighborPos) {
     if (neighborPos.y < room->pos.y) {
         room->northExits |= (1 << (neighborPos.x - room->pos.x));
-    }
-    else if (neighborPos.y > room->pos.y) {
+    } else if (neighborPos.y > room->pos.y) {
         room->southExits |= (1 << (neighborPos.x - room->pos.x));
-    }
-    else if (neighborPos.x < room->pos.x) {
+    } else if (neighborPos.x < room->pos.x) {
         room->westExits |= (1 << (neighborPos.y - room->pos.y));
-    }
-    else if (neighborPos.x > room->pos.x) {
+    } else if (neighborPos.x > room->pos.x) {
         room->eastExits |= (1 << (neighborPos.y - room->pos.y));
     }
 }
 
-void DungeonGen::addRoom(Room* room, bool generateRandomPosition)
-{
+void DungeonGen::addRoom(Room *room) {
     room->id = static_cast<int>(rooms.size());
 
-    if (generateRandomPosition)
-    {
-        // Generate a random position for the room
-        bool positionFound = false;
-
-        while (!positionFound)
-        {
-            vi2d position = { Helpers::GetRandomValue(0, width - room->size.x), Helpers::GetRandomValue(0, height - room->size.y) };
-
-            if (isPositionValid(position, room->size))
-            {
-                room->pos = position;
-                positionFound = true;
-            }
-        }
-    }
-
     if (room->canHaveSpawners) {
-        Spawner* topLeftSpawner = new Spawner();
+        auto topLeftSpawner = new Spawner();
         topLeftSpawner->pos = vi2d(room->pos * totalRoomSize) + vi2d(3, 3);
         topLeftSpawner->load();
         room->spawners.push_back(topLeftSpawner);
@@ -366,17 +323,14 @@ void DungeonGen::addRoom(Room* room, bool generateRandomPosition)
     rooms.push_back(room);
 
     // Add the room to the grid
-    for (int x = room->pos.x; x < room->pos.x + room->size.x; ++x)
-    {
-        for (int y = room->pos.y; y < room->pos.y + room->size.y; ++y)
-        {
+    for (int x = room->pos.x; x < room->pos.x + room->size.x; ++x) {
+        for (int y = room->pos.y; y < room->pos.y + room->size.y; ++y) {
             grid[x][y] = room;
         }
     }
 }
 
-void DungeonGen::generateMst()
-{
+void DungeonGen::generateMst() {
     edges.clear();
     if (!rooms.empty()) {
         unreached = rooms;
@@ -387,8 +341,8 @@ void DungeonGen::generateMst()
 
         while (!unreached.empty()) {
             float record = std::numeric_limits<float>::infinity();
-            int rIndex = 0;
-            int uIndex = 0;
+            unsigned int rIndex = 0;
+            unsigned int uIndex = 0;
             for (unsigned int i = 0; i < reached.size(); i++) {
                 for (unsigned int j = 0; j < unreached.size(); j++) {
                     const auto v1 = reached[i];
@@ -398,8 +352,7 @@ void DungeonGen::generateMst()
                     if (!(v2->pos.x == v1->pos.x + v1->size.x && v2->pos.y >= v1->pos.y && v2->pos.y < v1->pos.y + v1->size.y) &&
                         !(v2->pos.x + v2->size.x == v1->pos.x && v2->pos.y >= v1->pos.y && v2->pos.y < v1->pos.y + v1->size.y) &&
                         !(v2->pos.y == v1->pos.y + v1->size.y && v2->pos.x >= v1->pos.x && v2->pos.x < v1->pos.x + v1->size.x) &&
-                        !(v2->pos.y + v2->size.y == v1->pos.y && v2->pos.x >= v1->pos.x && v2->pos.x < v1->pos.x + v1->size.x))
-                    {
+                        !(v2->pos.y + v2->size.y == v1->pos.y && v2->pos.x >= v1->pos.x && v2->pos.x < v1->pos.x + v1->size.x)) {
                         continue; // Skip if the rooms don't share a straight wall
                     }
 
@@ -418,7 +371,7 @@ void DungeonGen::generateMst()
             int highestId = std::max(reached[rIndex]->id, unreached[uIndex]->id);
 
             auto edgeIds = std::pair(lowestId, highestId);
-            edges.push_back({ edgeIds, distance });
+            edges.emplace_back(edgeIds, distance);
 
             std::sort(edges.begin(), edges.end());
 
@@ -428,9 +381,8 @@ void DungeonGen::generateMst()
     }
 }
 
-void DungeonGen::connectRooms()
-{
-    for (const auto& edge : edges) {
+void DungeonGen::connectRooms() {
+    for (const auto &edge: edges) {
         auto firstRoom = getRoomById(edge.first.first);
         auto secondRoom = getRoomById(edge.first.second);
 
@@ -438,43 +390,36 @@ void DungeonGen::connectRooms()
     }
 }
 
-void DungeonGen::connectTwoRooms(Room* room1, Room* room2)
-{
+void DungeonGen::connectTwoRooms(Room *room1, Room *room2) {
     // Determine the shared wall based on the relative positions of the rooms
     Wall sharedWall;
 
-    Room* eastRoom = nullptr;
-    Room* westRoom = nullptr;
-    Room* northRoom = nullptr;
-    Room* southRoom = nullptr;
+    Room *eastRoom = nullptr;
+    Room *westRoom = nullptr;
+    Room *northRoom = nullptr;
+    Room *southRoom = nullptr;
 
 
-    if (room2->pos.x == room1->pos.x + room1->size.x && room1->pos.y < room2->pos.y + room2->size.y && room2->pos.y < room1->pos.y + room1->size.y)
-    {
+    if (room2->pos.x == room1->pos.x + room1->size.x && room1->pos.y < room2->pos.y + room2->size.y && room2->pos.y < room1->pos.y + room1->size.y) {
         sharedWall = Wall::East;
         eastRoom = room2;
         westRoom = room1;
-    }
-    else if (room1->pos.x == room2->pos.x + room2->size.x && room1->pos.y < room2->pos.y + room2->size.y && room2->pos.y < room1->pos.y + room1->size.y)
-    {
+    } else if (room1->pos.x == room2->pos.x + room2->size.x && room1->pos.y < room2->pos.y + room2->size.y &&
+               room2->pos.y < room1->pos.y + room1->size.y) {
         sharedWall = Wall::West;
         eastRoom = room1;
         westRoom = room2;
-    }
-    else if (room2->pos.y == room1->pos.y + room1->size.y && room1->pos.x < room2->pos.x + room2->size.x && room2->pos.x < room1->pos.x + room1->size.x)
-    {
+    } else if (room2->pos.y == room1->pos.y + room1->size.y && room1->pos.x < room2->pos.x + room2->size.x &&
+               room2->pos.x < room1->pos.x + room1->size.x) {
         sharedWall = Wall::South;
         northRoom = room1;
         southRoom = room2;
-    }
-    else if (room1->pos.y == room2->pos.y + room2->size.y && room1->pos.x < room2->pos.x + room2->size.x && room2->pos.x < room1->pos.x + room1->size.x)
-    {
+    } else if (room1->pos.y == room2->pos.y + room2->size.y && room1->pos.x < room2->pos.x + room2->size.x &&
+               room2->pos.x < room1->pos.x + room1->size.x) {
         sharedWall = Wall::North;
         northRoom = room2;
         southRoom = room1;
-    }
-    else
-    {
+    } else {
         return;
     }
 
@@ -492,26 +437,19 @@ void DungeonGen::connectTwoRooms(Room* room1, Room* room2)
         std::vector<int> possibleXpositions;
 
         for (int pos = std::min(room1WallLeft, room2WallLeft); pos <= std::max(room1WallRight, room2WallRight); pos++) {
-            // Check if the position is within both room1 and room2
             if (pos >= room1WallLeft && pos < room1WallRight && pos >= room2WallLeft && pos < room2WallRight) {
-                // The position is present in both rooms
                 possibleXpositions.push_back(pos);
             }
         }
 
         if (!possibleXpositions.empty()) {
-            // Pick a random X position from the shared positions
             int randomIndex = std::rand() % possibleXpositions.size();
             int randomXPosition = possibleXpositions[randomIndex];
-
-
 
             northRoom->southExits |= (1 << (std::clamp(randomXPosition - northRoom->pos.x, 0, northRoom->size.x)));
             southRoom->northExits |= (1 << (std::clamp(randomXPosition - southRoom->pos.x, 0, southRoom->size.x)));
         }
-
-    }
-    else {
+    } else {
         int room1WallTop, room1WallBottom = -1;
         int room2WallTop, room2WallBottom = -1;
 
@@ -524,23 +462,19 @@ void DungeonGen::connectTwoRooms(Room* room1, Room* room2)
         std::vector<int> possibleYpositions;
 
         for (int pos = std::min(room1WallTop, room2WallTop); pos < std::max(room1WallBottom, room2WallBottom); pos++) {
-            // Check if the position is within both room1 and room2
             if (pos >= room1WallTop && pos < room1WallBottom && pos >= room2WallTop && pos < room2WallBottom) {
-                // The position is present in both rooms
                 possibleYpositions.push_back(pos);
             }
         }
 
         if (!possibleYpositions.empty()) {
-            // Pick a random Y position from the shared positions
             int randomIndex = std::rand() % possibleYpositions.size();
             int randomYPosition = possibleYpositions[randomIndex];
 
-            // Update the exit bitmasks for the east and west rooms
+
             eastRoom->westExits |= (1 << (std::clamp(randomYPosition - eastRoom->pos.y, 0, eastRoom->size.y)));
             westRoom->eastExits |= (1 << (std::clamp(randomYPosition - westRoom->pos.y, 0, westRoom->size.y)));
         }
-
     }
 }
 
@@ -548,13 +482,13 @@ std::string DungeonGen::getMapString() {
     vi2d size = getSize();
     std::string mapString;
 
-    auto drawRectangle = [&](int height, int width, int xPos, int yPos, char character, std::string& mapString) {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+    auto drawRectangle = [&](int _height, int _width, int xPos, int yPos, Tile tile, std::string &mapString) {
+        for (int y = 0; y < _height; y++) {
+            for (int x = 0; x < _width; x++) {
                 int mapX = xPos + x;
                 int mapY = yPos + y;
                 int index = mapY * (size.x * totalRoomSize) + mapX;
-                mapString.at(index) = character;
+                mapString.at(index) = static_cast<char>(tile);
             }
         }
     };
@@ -565,16 +499,15 @@ std::string DungeonGen::getMapString() {
         }
     }
 
-    for (auto& room : rooms) {
-        int width = room->size.x * totalRoomSize;
-        int height = room->size.y * totalRoomSize;
+    for (auto &room: rooms) {
+        int _width = room->size.x * totalRoomSize;
+        int _height = room->size.y * totalRoomSize;
 
         int xPos = room->pos.x * totalRoomSize;
         int yPos = room->pos.y * totalRoomSize;
 
-
-        drawRectangle(height, width, xPos, yPos, '#', mapString);
-        drawRectangle(height - 2, width - 2, xPos + 1, yPos + 1, ' ', mapString);
+        drawRectangle(_height, _width, xPos, yPos, Tile::WALL, mapString);
+        drawRectangle(_height - 2, _width - 2, xPos + 1, yPos + 1, Tile::FLOOR, mapString);
 
         int doorSize = 4; // Adjust the size of the doorways
 
@@ -585,20 +518,21 @@ std::string DungeonGen::getMapString() {
 
             for (int i = 0; i < room->size.x; i++) {
                 if (room->northExits & doorBit) {
-                    drawRectangle(doorSize, doorSize, doorX, doorY, ' ', mapString);
+                    drawRectangle(1, doorSize, doorX, doorY, Tile::FLOOR, mapString);
                 }
                 doorX += totalRoomSize;
                 doorBit <<= 1;
             }
         }
+
         if (room->southExits > 0) {
             int doorX = xPos + (totalRoomSize / 2) - (doorSize / 2);
-            int doorY = yPos + (room->size.y * totalRoomSize) - doorSize;
+            int doorY = yPos + (room->size.y * totalRoomSize) - 1;
             int doorBit = 1;
 
             for (int i = 0; i < room->size.x; i++) {
                 if (room->southExits & doorBit) {
-                    drawRectangle(doorSize, doorSize, doorX, doorY, ' ', mapString);
+                    drawRectangle(1, doorSize, doorX, doorY, Tile::FLOOR, mapString);
                 }
                 doorX += totalRoomSize;
                 doorBit <<= 1;
@@ -606,13 +540,13 @@ std::string DungeonGen::getMapString() {
         }
 
         if (room->eastExits > 0) {
-            int doorX = xPos + (room->size.x * totalRoomSize) - doorSize;
+            int doorX = xPos + (room->size.x * totalRoomSize) - 1;
             int doorY = yPos + (totalRoomSize / 2) - (doorSize / 2);
             int doorBit = 1;
 
             for (int i = 0; i < room->size.y; i++) {
                 if (room->eastExits & doorBit) {
-                    drawRectangle(doorSize, doorSize, doorX, doorY, ' ', mapString);
+                    drawRectangle(doorSize, 1, doorX, doorY, Tile::FLOOR, mapString);
                 }
                 doorY += totalRoomSize;
                 doorBit <<= 1;
@@ -626,7 +560,7 @@ std::string DungeonGen::getMapString() {
 
             for (int i = 0; i < room->size.y; i++) {
                 if (room->westExits & doorBit) {
-                    drawRectangle(doorSize, doorSize, doorX, doorY, ' ', mapString);
+                    drawRectangle(doorSize, 1, doorX, doorY, Tile::FLOOR, mapString);
                 }
                 doorY += totalRoomSize;
                 doorBit <<= 1;
