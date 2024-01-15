@@ -247,38 +247,41 @@ void GameState::draw()
                     static_cast<float>(Configuration::tileWidth),
                     static_cast<float>(Configuration::tileHeight)
             };
-			Tile tile = localDungeonTiles.at(index);
+            Tile tile = localDungeonTiles.at(index);
+
+            if (tile == Tile::CLOSEDHDOOR || tile == Tile::CLOSEDVDOOR) {
+                tile = Tile::FLOOR;
+            }
+
+
             const Rectangle srcRect = getTile(tileData.tiles.at(index));
 
-            Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width,destRect.height}, srcRect, WHITE);
+            Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, srcRect, WHITE);
 
 
-			if (tile == Tile::FLOOR) {
-				Tile UPLEFTTILE = localDungeon.getTile(x - 1, y - 1);
-				Tile LEFTTILE = localDungeon.getTile(x - 1, y);
-				Tile UPTILE = localDungeon.getTile(x, y - 1);
+            if (tile == Tile::FLOOR) {
+                Tile UPLEFTTILE = localDungeon.getTile(x - 1, y - 1);
+                Tile LEFTTILE = localDungeon.getTile(x - 1, y);
+                Tile UPTILE = localDungeon.getTile(x, y - 1);
 
 
-				if (LEFTTILE == Tile::WALL && UPTILE == Tile::WALL) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(50), WHITE);
-				}
-				else if (LEFTTILE == Tile::WALL && UPTILE == Tile::FLOOR && UPLEFTTILE == Tile::WALL) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(52), WHITE);
-				}
-				else if (LEFTTILE == Tile::WALL && UPTILE == Tile::FLOOR && dungeon.isWalkable(UPLEFTTILE)) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(51), WHITE);
-				}
-				else if (LEFTTILE == Tile::FLOOR && UPTILE == Tile::WALL && UPLEFTTILE == Tile::WALL) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(48), WHITE);
-				}
-				else if (LEFTTILE == Tile::FLOOR && UPTILE == Tile::FLOOR && UPLEFTTILE == Tile::WALL) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(53), WHITE);
-				}
-				else if (LEFTTILE == Tile::FLOOR && UPTILE == Tile::WALL && UPLEFTTILE == Tile::FLOOR) {
-					Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(49), WHITE);
-				}
+                if (LEFTTILE == Tile::WALL && UPTILE == Tile::WALL) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(50), WHITE);
+                } else if (LEFTTILE == Tile::WALL && (UPTILE == Tile::FLOOR || UPTILE == Tile::CLOSEDHDOOR) && UPLEFTTILE == Tile::WALL) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(52), WHITE);
+                } else if (LEFTTILE == Tile::WALL && (UPTILE == Tile::FLOOR || UPTILE == Tile::CLOSEDHDOOR) && dungeon.isWalkable(UPLEFTTILE)) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(51), WHITE);
+                } else if ((LEFTTILE == Tile::FLOOR || LEFTTILE == Tile::CLOSEDHDOOR) && UPTILE == Tile::WALL && UPLEFTTILE == Tile::WALL) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(48), WHITE);
+                } else if ((LEFTTILE == Tile::FLOOR || LEFTTILE == Tile::CLOSEDHDOOR) && (UPTILE == Tile::FLOOR || UPTILE == Tile::CLOSEDHDOOR) &&
+                           UPLEFTTILE == Tile::WALL) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(53), WHITE);
+                } else if ((LEFTTILE == Tile::FLOOR || LEFTTILE == Tile::CLOSEDHDOOR) && UPTILE == Tile::WALL &&
+                           (UPLEFTTILE == Tile::FLOOR || UPLEFTTILE == Tile::CLOSEDHDOOR)) {
+                    Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, getTile(49), WHITE);
+                }
 
-			}
+            }
 
         }
     }

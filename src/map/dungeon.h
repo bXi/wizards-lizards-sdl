@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "newdungeon.h"
+#include "tile.h"
 
 #include "utils/vectors.h"
 #include "utils/colors.h"
@@ -15,15 +16,7 @@ struct Position {
     int x, y;
 };
 
-enum class Tile : char {
-    VOID = '.',
-    FLOOR = ' ',
-    WALL = '#',
-    CLOSEDDOOR = '+',
-    OPENDOOR = '-',
-    UPSTAIRS = '<',
-    DOWNSTAIRS = '>',
-};
+
 
 struct DungeonTileData {
     int width = 0, height = 0;
@@ -340,7 +333,7 @@ public:
 
     bool isWalkable(Tile tile) {
 
-        return tile == Tile::FLOOR || /*tile == Tile::VOID || */tile == Tile::OPENDOOR || tile == Tile::UPSTAIRS || tile == Tile::DOWNSTAIRS;
+        return tile == Tile::FLOOR || tile == Tile::OPENHDOOR || tile == Tile::OPENVDOOR || tile == Tile::UPSTAIRS || tile == Tile::DOWNSTAIRS;
     };
 
     void setDungeonTileData()
