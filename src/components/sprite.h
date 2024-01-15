@@ -23,6 +23,10 @@ struct Sprite
 
 	bool doubleHeight = false;
 
+    int spriteWidth = 16;
+    int spriteHeight = 16;
+
+
 	float originX = width / 2.f;
 	float originY = height / 2.f;
 

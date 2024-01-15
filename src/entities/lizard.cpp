@@ -12,7 +12,7 @@ void CreateLizardEntity(vf2d pos, float maxHealth) {
 		.set<Health>({ maxHealth, 32 })
 		.set<EnemyEntity>({ })
 		.set<AIController>({})
-		.set<Sprite>({ 32.f, 64.f, sprite, false, false, 16.f, 48.f })
+		.set<Sprite>({ 32.f, 64.f, sprite, false, false, 16, 16, 16.f, 48.f })
 		.set<Render2DComp>({  });
 
 	

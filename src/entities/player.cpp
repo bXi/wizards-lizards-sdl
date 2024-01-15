@@ -17,7 +17,7 @@ void CreatePlayerEntity(int index, vf2d pos) {
 		.set<PlayerIndex>({ index })
 		.set<PlayerInput>({  })
 		.set<PlayerClass>({ PlayerClassType::WIZARD })
-		.set<Sprite>({ 32.f, 56.f, sprite, true, true, 16.f, 40.f, direction::WEST })
+		.set<Sprite>({ 32.f, 56.f, sprite, true, true, 32, 32, 16.f, 40.f, direction::WEST })
 		.set<Render2DComp>({})
 		.emplace<Collision>(CATEGORY_FIREBALL, MASK_FIREBALL);
 		
