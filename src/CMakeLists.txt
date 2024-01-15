@@ -38,6 +38,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
         entities/lizard.cpp
         entities/lizard.h
         entities/physicsobject.h
+        entities/gate.cpp
+        entities/gate.h
         entities/player.cpp
         entities/player.h
         entities/spawner.h
@@ -48,6 +50,7 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
         map/levelmanager.h
         map/newdungeon.cpp
         map/newdungeon.h
+        map/tile.h
         map/room.h
         states/game/game.cpp
         states/game/game.h
