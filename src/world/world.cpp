@@ -369,7 +369,7 @@ void World::BeginContact(b2Contact* contact)
 
 
 
-        if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>()) {
+        if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>() && !other->get<DeleteBulletsOnHit>()->disable) {
             fireball->set<DeleteMe>({});
         }
 

@@ -5,4 +5,6 @@ struct DeleteBulletsOnHit
 {
     int x;
 
+    bool disable = false;
+
 };
