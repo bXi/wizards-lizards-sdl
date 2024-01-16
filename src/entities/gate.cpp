@@ -17,7 +17,7 @@ void CreateGateEntity(vf2d pos, int roomId) {
         .set<GateEntity>({ roomId })
         .set<RenderFrame>({ 16 })
 		.set<Render2DComp>({})
-        .emplace<Collision>(CATEGORY_GATE, MASK_GATE)
+        .emplace<Collision>(CATEGORY_FIREBALL, (uint16_t)0x0000)
         .emplace<Sprite>(32.f, 64.f, sprite, true, true, 32, 32, 16.f, 48.f, direction::EAST);
 
     vf2d Size = { 1,1 };

@@ -21,9 +21,12 @@ struct GateEntity {
 
         entity.get_mut<RenderFrame>()->RenderFrameNumber = 20;
 
+        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
+        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
+            fixture->SetSensor(false);
+        }
 
-        entity.get_mut<Collision>()->mask = 0x0000;
-
+        entity.get_mut<DeleteBulletsOnHit>()->disable = false;
 
     }
     void open(flecs::entity entity) {
@@ -31,7 +34,12 @@ struct GateEntity {
 
         entity.get_mut<RenderFrame>()->RenderFrameNumber = 16;
 
-        entity.get_mut<Collision>()->mask = MASK_GATE;
+        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
+        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
+            fixture->SetSensor(true);
+        }
+
+        entity.get_mut<DeleteBulletsOnHit>()->disable = true;
     }
 };
 
