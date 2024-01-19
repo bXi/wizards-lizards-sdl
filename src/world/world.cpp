@@ -38,7 +38,7 @@ void PhysicsWall::draw()
     return;
 
     auto origin = (vf2d)HalfSize * vi2d(Configuration::tileWidth, Configuration::tileHeight);
-    Rectangle rec = {RigidBody->GetPosition().x * Configuration::tileWidth, RigidBody->GetPosition().y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
+    rectf rec = {RigidBody->GetPosition().x * Configuration::tileWidth, RigidBody->GetPosition().y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
 
     vf2d pos = vf2d{rec.x, rec.y} + origin;
     Render2D::DrawRectangle(pos, {rec.width, rec.height}, ShapeColor);
@@ -97,19 +97,19 @@ void World::handleCollision(b2Contact* contact, bool beginCollision)
 }
 
 //CREDIT: piratux on Javids Discord
-std::vector<Rectangle> World::mergeWalls(const std::vector<Tile>& map, int width, int height) {
+std::vector<rectf> World::mergeWalls(const std::vector<Tile>& map, int width, int height) {
 
-    std::vector<Rectangle> horizontalRectangles;
-    std::vector<Rectangle> verticalRectangles;
+    std::vector<rectf> horizontalRectangles;
+    std::vector<rectf> verticalRectangles;
 
 
-    std::vector<Rectangle> mergedRectangles;
+    std::vector<rectf> mergedRectangles;
 
 
     // TODO: replace "asset_manager->map[index]" with get function
     auto create_tile_hitbox = [&](int32_t x_idx, int32_t y_idx, int32_t x_length, int32_t y_length, bool horizontal_hitbox)
     {
-        Rectangle box = {
+        rectf box = {
             static_cast<float>(x_idx),
             static_cast<float>(y_idx),
             static_cast<float>(x_length),

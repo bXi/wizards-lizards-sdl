@@ -92,13 +92,13 @@ public:
     Texture dungeonTileset;
     DungeonTileData tileData;
 
-    Rectangle getRectangle(int _x, int _y)
+    rectf getRectangle(int _x, int _y)
 	{
-		const Rectangle rect = {static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
+		const rectf rect = {static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
 		return rect;
 	};
 
-	Rectangle getTile(int tileId)
+	rectf getTile(int tileId)
 	{
 		return getRectangle(tileId % 16, tileId / 16);
 	};

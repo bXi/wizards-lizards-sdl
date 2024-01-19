@@ -206,7 +206,7 @@ private:
 
     //std::vector<Entity*> nonPlayerCollideEntities;
 
-    std::vector<Rectangle> mergeWalls(const std::vector<Tile>& map, int width, int height);
+    std::vector<rectf> mergeWalls(const std::vector<Tile>& map, int width, int height);
 
     Color _backgroundColor = {66, 57, 58, 255};
 

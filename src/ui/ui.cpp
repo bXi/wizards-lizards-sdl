@@ -33,7 +33,7 @@ void UI::drawTimerBar() {
     Render2D::DrawRectangleFilled({0, (float)screenHeight - (float)barThickness}, {(float)screenWidth, (float)barThickness}, BLACK); // Bottom
 
 
-    Rectangle bars[5] = {
+    rectf bars[5] = {
         {  (float)screenWidth / 2.f, 0, (float)screenWidth / 2.f, (float)barThickness }, // Top bar
         {  (float)screenWidth - (float)barThickness,  0.f, (float)barThickness,  (float)screenHeight }, // Right bar
         {  0.f,  (float)screenHeight - (float)barThickness,  (float)screenWidth, (float)barThickness }, // Bottom bar
@@ -95,7 +95,7 @@ void UI::drawTimerBar() {
     const Texture uiElements = Textures::GetTexture("assets/ui/ui.png");
     const Texture items = Textures::GetTexture("assets/tilesets/items-1.png");
 
-    Rectangle selectedPowerUpBox = {539, 460, 24, 24};
+    rectf selectedPowerUpBox = {539, 460, 24, 24};
 
     auto player = entity.get_mut<PlayerInput>();
 
@@ -173,14 +173,14 @@ void UI::drawTimerBar() {
 
         }
 
-        Rectangle itemPosition = {
+        rectf itemPosition = {
                 (worldPos.x + circleRadius * sin(angle)) - 8.f,
                 (worldPos.y + circleRadius * cos(angle)) - 8.f,
                 16.f,
                 16.f,
         };
 
-        Rectangle boxPosition = {
+        rectf boxPosition = {
                 itemPosition.x - 16,
                 itemPosition.y - 18,
                 48.f,
@@ -405,7 +405,7 @@ void UI::DrawMiniMap(Texture texture) {
 
     auto lines = Log::getLines();
 
-    Rectangle backgroundRect = {
+    rectf backgroundRect = {
             static_cast<float>(baseX - margin),
             static_cast<float>(baseY - margin),
             static_cast<float>(Log::getHeaderWidth() + Log::getLongestLineWidth() + (margin * 3)),

@@ -108,7 +108,7 @@ class TestState : public BaseState {
 	bool showLines = true;
 
     //Box2D
-	Rectangle scissorArea = {0, 0, 300, 300 };
+	rectf scissorArea = {0, 0, 300, 300 };
 	std::vector<PhysicsObject*> Objects;
 
     vf2d groundSize = { 100, 2 };    // save a vector of our ground size, so we know what to draw

@@ -41,14 +41,14 @@ void Render2DComp::draw(flecs::entity* entity)
 
 		const vf2d pos = rigidBody->RigidBody->GetPosition();
 
-		const Rectangle position = {
+		const rectf position = {
 			pos.x * static_cast<float>(Configuration::tileWidth) - sprite->originX,
 			pos.y * static_cast<float>(Configuration::tileHeight) - sprite->originY,
 			sprite->width,
 			sprite->height
 		};
 
-		Rectangle source;
+		rectf source;
 		if (sprite->multiSheet) {
 			source = Textures::GetTile(renderFrame, sprite->doubleHeight, sprite->spriteWidth, sprite->spriteHeight);
 		}

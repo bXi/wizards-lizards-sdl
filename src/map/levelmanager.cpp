@@ -56,7 +56,7 @@ void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, 
 
 	auto getRectangle = [&](int _x, int _y)
 	{
-		const Rectangle rect = {static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
+		const rectf rect = {static_cast<float>(_x * Configuration::tileWidth), static_cast<float>(_y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
 		return rect;
 	};
 
@@ -65,7 +65,7 @@ void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, 
 		return getRectangle(tileId % 16, tileId / 16);
 	};
 
-	auto drawToMap = [&](Texture* _tex, const Texture(_tileset), const Rectangle tile, const Rectangle dest, Color color)
+	auto drawToMap = [&](Texture* _tex, const Texture(_tileset), const rectf tile, const rectf dest, Color color)
 	{
 		//std::lock_guard<std::mutex> guard(_tex_mutex);
 		//ImageDraw(_tex, _tileset, tile, dest, color);
@@ -91,7 +91,7 @@ void LevelManager::renderRow(const int start, const int rows, Dungeon _dungeon, 
 			//Tile DOWNTILE = _dungeon.GetTile(x, y + 1);
 
 
-			const Rectangle destRect = {static_cast<float>(x * Configuration::tileWidth), static_cast<float>(y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
+			const rectf destRect = {static_cast<float>(x * Configuration::tileWidth), static_cast<float>(y * Configuration::tileHeight), static_cast<float>(Configuration::tileWidth), static_cast<float>(Configuration::tileHeight) };
 
             drawToMap(&finalTextureImage, _dungeonTileset, getTile(tiles.tiles.at(index)), destRect, WHITE);
 

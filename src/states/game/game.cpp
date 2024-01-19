@@ -241,7 +241,7 @@ void GameState::draw()
 		for (int x = leftMargin; x < rightMargin; x++) {
             int index = y * tileData.width + x;
 
-            const Rectangle destRect = {
+            const rectf destRect = {
                     static_cast<float>(x * Configuration::tileWidth),
                     static_cast<float>(y * Configuration::tileHeight),
                     static_cast<float>(Configuration::tileWidth),
@@ -254,7 +254,7 @@ void GameState::draw()
             }
 
 
-            const Rectangle srcRect = getTile(tileData.tiles.at(index));
+            const rectf srcRect = getTile(tileData.tiles.at(index));
 
             Render2D::DrawTexturePart(dungeonTileset, {destRect.x, destRect.y}, {destRect.width, destRect.height}, srcRect, WHITE);
 

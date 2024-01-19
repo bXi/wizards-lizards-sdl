@@ -131,7 +131,7 @@ void TestState::draw()
 			}
 		}
 
-		const Rectangle rect = {0.0f, 0.0f, static_cast<float>(size), static_cast<float>(size) };
+		const rectf rect = {0.0f, 0.0f, static_cast<float>(size), static_cast<float>(size) };
 
 		QuadTree quadtree = QuadTree(rect);
 
@@ -292,12 +292,12 @@ void TestState::draw()
 
 			}
 
-            auto CheckCollisionPointRec = [&](vf2d point, Rectangle rect){
+            auto CheckCollisionPointRec = [&](vf2d point, rectf rect){
                 return (point.x >= rect.x && point.x <= rect.x + rect.width && point.y >= rect.y && point.y <= rect.y + rect.height);
             };
 
 
-			if (CheckCollisionPointRec(Input::GetMousePosition(), Rectangle(static_cast<float>(xPos), static_cast<float>(yPos), static_cast<float>(scalefactor) * room->size.x, static_cast<float>(scalefactor) * room->size.y))) {
+			if (CheckCollisionPointRec(Input::GetMousePosition(), rectf(static_cast<float>(xPos), static_cast<float>(yPos), static_cast<float>(scalefactor) * room->size.x, static_cast<float>(scalefactor) * room->size.y))) {
 				color = PINK;
 
 				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 100}, Helpers::TextFormat("ID: %d/%d", room->id, rooms.size()),  LIME);
@@ -396,12 +396,12 @@ void TestState::draw()
 
 		const vf2d drawOffset = { 400.0f, 50.0f };
 
-		Rectangle rect = {100.0f, 100.0f, 400.0f, 400.0f };
+		rectf rect = {100.0f, 100.0f, 400.0f, 400.0f };
 		vf2d lineStart = { 300.0f, 300.0f };
 		vf2d lineEnd = Input::GetMousePosition();
 		lineEnd -= drawOffset;
 
-		Rectangle drawRect = rect;
+		rectf drawRect = rect;
 		drawRect.x += drawOffset.x;
 		drawRect.y += drawOffset.y;
 
@@ -539,14 +539,14 @@ void TestState::draw()
     } break;
 	case Test::Random:{
 
-        Rectangle destRect = {
+        rectf destRect = {
                 600.f,
                 200.f,
                 32.f,
                 32.f
         };
 
-        Rectangle srcRect = {
+        rectf srcRect = {
                 64.f,
                 32.f,
                 32.f,
