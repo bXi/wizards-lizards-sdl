@@ -516,7 +516,7 @@ void GameState::drawUI()
 		resetGame();
 	}
 
-	if (Input::KeyPressed(SDLK_F11)) {
+	if (Input::KeyPressed(SDLK_F11) && !Input::KeyDown(SDLK_LSHIFT)) {
         Configuration::showGameStats = !Configuration::showGameStats;
     }
 
