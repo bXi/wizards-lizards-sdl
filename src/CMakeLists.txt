@@ -22,6 +22,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
         components/radius.h
         components/render2d.cpp
         components/render2d.h
+        components/debugrigidbody2d.cpp
+        components/debugrigidbody2d.h
         components/rigidbody2d.h
         components/sprite.h
         components/type.h

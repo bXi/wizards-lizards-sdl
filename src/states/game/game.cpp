@@ -357,6 +357,19 @@ X
 
 	World::draw();
 
+    if (Configuration::showGameStats) {
+
+
+
+        const auto debugRigids = ECS::getWorld().filter<DebugRigidBody2D>();
+        debugRigids.each([&](flecs::entity entity, DebugRigidBody2D db) {
+
+            db.draw(entity);
+
+
+        });
+
+    }
 
 	Render2D::EndMode2D();
 
