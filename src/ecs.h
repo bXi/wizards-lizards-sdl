@@ -61,7 +61,7 @@ private:
 		_ecs.reset();
 		_ecs = flecs::world();
 
-#ifdef DEBUG
+#ifndef NDEBUG
 		_ecs.set<flecs::Rest>({});
 		_ecs.import<flecs::monitor>();
 #endif
