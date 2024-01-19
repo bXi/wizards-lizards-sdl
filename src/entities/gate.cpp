@@ -41,6 +41,7 @@ void CreateGateEntity(vf2d pos, int roomId) {
 
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &Box;
+    fixtureDef.isSensor = true;
 	fixtureDef.density = 1.0f;
 	fixtureDef.friction = 0.3f;
 	RigidBody->CreateFixture(&fixtureDef);
@@ -48,5 +49,7 @@ void CreateGateEntity(vf2d pos, int roomId) {
 	entity.emplace<RigidBody2D>(RigidBody);
 
 	entity.set<UserDataComponent>({ std::move(userData) });
+
+    entity.get_mut<GateEntity>()->open(entity);
 
 }

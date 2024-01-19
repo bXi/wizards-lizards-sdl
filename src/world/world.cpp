@@ -6,6 +6,8 @@
 #include "components/owner.h"
 #include "components/rigidbody2d.h"
 #include "components/playerclass.h"
+#include "entities/roomsensor.h"
+#include "entities/gate.h"
 
 PhysicsWall::PhysicsWall(const vf2d& pos, const vf2d& size)
 {
@@ -315,14 +317,16 @@ void World::BeginContact(b2Contact* contact)
 
         if (entityA.has<EnemyEntity>() && entityB.has<EnemyEntity>()) return;
 
-        flecs::entity* player;
-        flecs::entity* fireball;
-        flecs::entity* enemy;
-        flecs::entity* other;
+        flecs::entity* player = nullptr;
+        flecs::entity* fireball = nullptr;
+        flecs::entity* enemy = nullptr;
+        flecs::entity* other = nullptr;
+        flecs::entity* sensor = nullptr;
 
         bool doFireball = false;
         bool doPlayerHit = false;
         bool doDeleteBulletsOnHit = false;
+        bool doSensor = false;
 
         // Perform collision handling based on the entity types
         if (entityA.has<EnemyEntity>() && entityB.has<FireballEntity>()) {
@@ -345,6 +349,18 @@ void World::BeginContact(b2Contact* contact)
             player = &entityB;
             doPlayerHit = true;
         }
+
+        else if (entityA.has<PlayerEntity>() && entityB.has<RoomSensorEntity>()) {
+            player = &entityA;
+            sensor = &entityB;
+            doSensor = true;
+        }
+        else if (entityA.has<RoomSensorEntity>() && entityB.has<PlayerEntity>()) {
+            sensor = &entityA;
+            player = &entityB;
+            doSensor = true;
+        }
+
         else if (entityA.has<FireballEntity>()) {
             fireball = &entityA;
             other = &entityB;
@@ -367,7 +383,19 @@ void World::BeginContact(b2Contact* contact)
         }
 
 
+        if (doSensor) {
+            std::vector<flecs::entity> gateCloseEntities;
 
+            const auto gates = ECS::getWorld().filter<GateEntity>();
+            gates.each([&](flecs::entity entity, GateEntity gate) {
+                if (gate.roomId == sensor->get<RoomSensorEntity>()->roomId) {
+                    if (!gate.closed) {
+                        gateCloseEntities.push_back(entity);
+                    }
+                }
+            });
+            for (auto entity : gateCloseEntities) entity.get_mut<GateEntity>()->close(entity);
+        }
 
         if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>() && !other->get<DeleteBulletsOnHit>()->disable) {
             fireball->set<DeleteMe>({});

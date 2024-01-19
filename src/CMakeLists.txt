@@ -40,6 +40,8 @@ target_sources(${EXECUTABLE_NAME} PRIVATE
         entities/physicsobject.h
         entities/gate.cpp
         entities/gate.h
+        entities/roomsensor.cpp
+        entities/roomsensor.h
         entities/player.cpp
         entities/player.h
         entities/spawner.h

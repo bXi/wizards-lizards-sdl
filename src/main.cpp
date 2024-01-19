@@ -5,6 +5,8 @@
 #endif
 
 
+#include "entities/gate.h"
+
 static void mainloop()
 {
     if (Window::ShouldQuit()) {

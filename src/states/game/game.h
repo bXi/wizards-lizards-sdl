@@ -12,20 +12,20 @@
 #include <log/loghandler.h>
 
 #include "entities/spawner.h"
-//#include "entities/powerup.h"
 
 #include <configuration/configuration.h>
 
 #include "entities/player.h"
 #include "entities/lizard.h"
 #include "entities/gate.h"
+#include "entities/roomsensor.h"
 
 #include "world/world.h"
 #include "map/room.h"
 #include "map/levelmanager.h"
 
 #include <state/basestate.h>
-
+//#include "entities/powerup.h"
 inline auto doCirclesOverlap = [](float x1, float y1, float r1, float x2, float y2, float r2)
 {
 	return fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);

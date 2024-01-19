@@ -10,10 +10,11 @@
 #include "components/render2d.h"
 #include "components/playerinput.h"
 #include "components/deletebulletsonhit.h"
+#include "components/renderframe.h"
 
 struct GateEntity {
     int roomId = -1;
-    bool closed = false;
+    bool closed = true;
     float openTimer = 0.f;
 
     void close(flecs::entity entity) {

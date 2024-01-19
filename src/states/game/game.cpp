@@ -45,6 +45,43 @@ void GameState::resetGame()
 	rooms = World::getRooms();
     tileData = World::getDungeon().getDungeonTileData();
 
+    for (auto& room: rooms) {
+        if (room->specialRoom) {
+
+            vf2d testpos = (room->pos);// + room->size);// * vf2d(totalRoomSize, totalRoomSize);
+
+            if (room->northExits > 0) {
+                CreateGateEntity(testpos + vf2d(18.5f, 0.5f), room->id);
+                CreateGateEntity(testpos + vf2d(19.5f, 0.5f), room->id);
+                CreateGateEntity(testpos + vf2d(20.5f, 0.5f), room->id);
+                CreateGateEntity(testpos + vf2d(21.5f, 0.5f), room->id);
+            }
+
+            if (room->southExits > 0) {
+                CreateGateEntity(testpos + vf2d(18.5f, 39.5f), room->id);
+                CreateGateEntity(testpos + vf2d(19.5f, 39.5f), room->id);
+                CreateGateEntity(testpos + vf2d(20.5f, 39.5f), room->id);
+                CreateGateEntity(testpos + vf2d(21.5f, 39.5f), room->id);
+            }
+
+            if (room->westExits > 0) {
+                CreateGateEntity(testpos + vf2d(0.5f, 18.5f), room->id);
+                CreateGateEntity(testpos + vf2d(0.5f, 19.5f), room->id);
+                CreateGateEntity(testpos + vf2d(0.5f, 20.5f), room->id);
+                CreateGateEntity(testpos + vf2d(0.5f, 21.5f), room->id);
+            }
+
+            if (room->eastExits > 0) {
+                CreateGateEntity(testpos + vf2d(39.5f, 18.5f), room->id);
+                CreateGateEntity(testpos + vf2d(39.5f, 19.5f), room->id);
+                CreateGateEntity(testpos + vf2d(39.5f, 20.5f), room->id);
+                CreateGateEntity(testpos + vf2d(39.5f, 21.5f), room->id);
+            }
+
+            CreateRoomSensorEntity(testpos, room->id);
+        }
+    }
+
 	CreatePlayerEntity(1, World::getStart());
 
 	setupControls();
@@ -200,8 +237,29 @@ void GameState::draw()
 		aicontroller.seek();
 	});
 
-	/*if
+    if (Input::KeyPressed(SDLK_c)) {
+        std::vector<flecs::entity> gateOpenEntities;
+        std::vector<flecs::entity> gateCloseEntities;
 
+        const auto gates = ECS::getWorld().filter<GateEntity>();
+        gates.each([&](flecs::entity entity, GateEntity gate) {
+            if (gate.roomId == currentRoom->id) {
+                if (gate.closed) {
+                    gateOpenEntities.push_back(entity);
+                } else {
+                    gateCloseEntities.push_back(entity);
+                }
+            }
+        });
+
+        for (auto entity : gateOpenEntities) entity.get_mut<GateEntity>()->open(entity);
+        for (auto entity : gateCloseEntities) entity.get_mut<GateEntity>()->close(entity);
+    }
+
+
+
+	/*if
+X
 		for (auto& gameEntity : entities) {
 			gameEntity->update(dungeon);
 			if (gameEntity->canDelete && State::randomChance(std::max(97.0f + ((0.0f - static_cast<float>(Configuration::gameTime)) / 20.f), 90.0f))) {
