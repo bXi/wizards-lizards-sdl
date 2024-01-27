@@ -10,8 +10,8 @@ enable_language(CXX)
 
 set(CMAKE_C_STANDARD 23)
 
-
-set(ADD_IMGUI ON)
+option(ADD_IMGUI "Enable ImGui support" ON)
+set(ADD_IMGUI ${ADD_IMGUI} CACHE BOOL "Enable ImGui support" FORCE)
 add_compile_definitions(ADD_IMGUI)
 
 if (EMSCRIPTEN)
