@@ -3,17 +3,9 @@
 #include <list>
 #include <cstring>
 
-#include <utils/helpers.h>
-#include <utils/lerp.h>
-
-#include <input/inputhandler.h>
-#include <fonts/fonthandler.h>
-#include <settings/settingshandler.h>
-#include <log/loghandler.h>
+#include "luminoveau.h"
 
 #include "entities/spawner.h"
-
-#include <configuration/configuration.h>
 
 #include "entities/player.h"
 #include "entities/lizard.h"

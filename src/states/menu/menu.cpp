@@ -12,6 +12,9 @@ void MenuState::load()
 	Audio::GetSound("assets/sfx/cursor.wav");
 	Audio::GetSound("assets/sfx/confirm.wav");
 
+    titleFont = Text::GetFont("assets/fonts/APL386.ttf", 72);
+    menuFont = Text::GetFont("assets/fonts/APL386.ttf", 18);
+
 	mo["main"].SetTable(1, 6);
 	mo["main"]["Start game"].setCallback([&]() { State::SetState("game"); });
 
@@ -42,7 +45,7 @@ void MenuState::load()
 
 	mo["main"]["Options"]["Video"]["Fullscreen"].setCallback([&mo = mo]() {
 
-		Settings::toggleFullscreen();
+		Window::ToggleFullscreen();
 		mo["main"]["Options"]["Video"]["Fullscreen"].setActive(Window::IsFullscreen());
 		}).setActive(Window::IsFullscreen());
 
@@ -90,7 +93,7 @@ void MenuState::draw()
 	const int leftMargin = Window::GetWidth() / 10;
 	const int topMargin = Window::GetHeight() / 10;
 
-	Fonts::DrawText("assets/fonts/APL386.ttf", 72, {(float)leftMargin, (float)topMargin}, "Wizards & Lizards", WHITE);
+	Text::DrawText(titleFont, {(float)leftMargin, (float)topMargin}, "Wizards & Lizards", WHITE);
 
 	menuobject* command = nullptr;
 
@@ -144,7 +147,7 @@ void MenuState::draw()
 	int baseY = 300;
 
 	if (Configuration::showFPS) {
-		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {(float)baseX, (float)baseY}, Helpers::TextFormat("%d", Window::GetFPS()), GREEN);
+		Text::DrawText(menuFont, {(float)baseX, (float)baseY}, Helpers::TextFormat("%d", Window::GetFPS()), GREEN);
 	}
 
 	if (command != nullptr)

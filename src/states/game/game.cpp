@@ -1,4 +1,5 @@
 #include "game.h"
+#include "log/loghandler.h"
 
 #include <state/state.h>
 
@@ -112,7 +113,7 @@ void GameState::load()
 
     dungeonTileset = Textures::GetTexture("assets/tilesets/dungeon.png");
 
-    Fonts::GetFont("assets/fonts/APL386.ttf", 20);
+    Text::GetFont("assets/fonts/APL386.ttf", 20);
 
     Audio::GetMusic("assets/music/boss-1-loop.wav");
     Audio::GetSound("assets/sfx/slowmo-enter.wav");
@@ -538,8 +539,8 @@ void GameState::drawUI()
 
 		Color titleColor = { 255,255,255,255 };
 
-
-		int textWidth = Fonts::MeasureText("assets/fonts/APL386.ttf", 40, currentRoom->name);
+        Font roomTitleFont = Text::GetFont("assets/fonts/APL386.ttf", 40);
+		int textWidth = Text::MeasureText(roomTitleFont, currentRoom->name);
 
 		float newAlpha = 0.0f;
 
@@ -555,7 +556,7 @@ void GameState::drawUI()
 
 		titleColor.a = static_cast<int>(newAlpha * 255.f);
 
-		Fonts::DrawText("assets/fonts/APL386.ttf", 40, {((float)Window::GetWidth() / 2.f) - ((float)textWidth / 2.f), 100.f,}, currentRoom->name.c_str(), titleColor);
+		Text::DrawText(roomTitleFont, {((float)Window::GetWidth() / 2.f) - ((float)textWidth / 2.f), 100.f,}, currentRoom->name.c_str(), titleColor);
 	}
 
 }

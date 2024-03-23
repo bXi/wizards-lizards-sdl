@@ -21,6 +21,8 @@ void TestState::load()
     Audio::GetSound("assets/sfx/cursor.wav");
     dungeonTileset = Textures::GetTexture("assets/tilesets/dungeon.png");
 
+    font = Text::GetFont("assets/fonts/APL386.ttf", 18);
+
 	//Lerp test
 	testlerp = Lerp::getLerp("Testlerp", 400.0f, 400.0f, 3.0f);
 
@@ -82,9 +84,9 @@ void TestState::draw()
 		int y = 10;
 
 		const char* backText = " ESC: back to menu";
-		maxWidth = Fonts::MeasureText("assets/fonts/APL386.ttf", 18, backText);
+		maxWidth = Text::MeasureText(font, backText);
 
-		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {x, Window::GetHeight() - 30.f},backText, WHITE);
+		Text::DrawText(font, {x, Window::GetHeight() - 30.f},backText, WHITE);
 
 #ifndef MSVC
 //        std::reverse(testList);
@@ -93,8 +95,8 @@ void TestState::draw()
 		for (const auto& item : testList)
 		{
 			const auto name = Helpers::TextFormat("%3u: %s", static_cast<int>(item.first) + 1, item.second.c_str());
-			Fonts::DrawText("assets/fonts/APL386.ttf", 18, {(float)x, (float)y } , name, (item.first == selected) ? YELLOW : WHITE);
-			maxWidth = std::max(maxWidth, Fonts::MeasureText("assets/fonts/APL386.ttf", 18, name));
+			Text::DrawText(font, {(float)x, (float)y } , name, (item.first == selected) ? YELLOW : WHITE);
+			maxWidth = std::max(maxWidth, Text::MeasureText(font, name));
 
             y += 24;
 		}
@@ -175,8 +177,8 @@ void TestState::draw()
 		}
 		quadtree.draw(drawOffset.x, drawOffset.y, WHITE);
 		quadtree.reset();
-		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {(float)drawOffset.x, Window::GetHeight() - 30.f}, Helpers::TextFormat("Points: %u | Found: %u", static_cast<int>(testPoints.size()), found), WHITE);
-		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {300.f, Window::GetHeight() - 30.f}, Helpers::TextFormat("%d", Window::GetFPS()), LIME);
+		Text::DrawText(font, {(float)drawOffset.x, Window::GetHeight() - 30.f}, Helpers::TextFormat("Points: %u | Found: %u", static_cast<int>(testPoints.size()), found), WHITE);
+		Text::DrawText(font, {300.f, Window::GetHeight() - 30.f}, Helpers::TextFormat("%d", Window::GetFPS()), LIME);
 
 	} break;
 	case Test::Lerp:
@@ -300,11 +302,11 @@ void TestState::draw()
 			if (CheckCollisionPointRec(Input::GetMousePosition(), rectf(static_cast<float>(xPos), static_cast<float>(yPos), static_cast<float>(scalefactor) * room->size.x, static_cast<float>(scalefactor) * room->size.y))) {
 				color = PINK;
 
-				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 100}, Helpers::TextFormat("ID: %d/%d", room->id, rooms.size()),  LIME);
-				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 125}, Helpers::TextFormat("North: %d", room->northExits),  LIME);
-				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 150}, Helpers::TextFormat("South: %d", room->southExits),  LIME);
-				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 175}, Helpers::TextFormat("East: %d", room->eastExits),  LIME);
-				Fonts::DrawText("assets/fonts/APL386.ttf", 18, {1000, 200}, Helpers::TextFormat("West: %d", room->westExits),  LIME);
+				Text::DrawText(font, {1000, 100}, Helpers::TextFormat("ID: %d/%d", room->id, rooms.size()),  LIME);
+				Text::DrawText(font, {1000, 125}, Helpers::TextFormat("North: %d", room->northExits),  LIME);
+				Text::DrawText(font, {1000, 150}, Helpers::TextFormat("South: %d", room->southExits),  LIME);
+				Text::DrawText(font, {1000, 175}, Helpers::TextFormat("East: %d", room->eastExits),  LIME);
+				Text::DrawText(font, {1000, 200}, Helpers::TextFormat("West: %d", room->westExits),  LIME);
 			}
 
 
@@ -512,7 +514,7 @@ void TestState::draw()
 
 		Render2D::EndScissorMode();
 
-		Fonts::DrawText("assets/fonts/APL386.ttf", 18, {maxWidth + 60.f, 10.f}, "Left Click to add a ball - Right Click to add a box",  WHITE);
+		Text::DrawText(font, {maxWidth + 60.f, 10.f}, "Left Click to add a ball - Right Click to add a box",  WHITE);
 	} break;
     case Test::Render2D:{
 
@@ -570,7 +572,7 @@ void TestState::draw()
 
         UI::drawSmallBar({18.75f,9.375f}, {1 ,0}, 50, 10, {0,0,255,255}, testPercentage);
 
-        Fonts::DrawText("assets/fonts/APL386.ttf", 20, {600.f, 250.f}, Helpers::TextFormat("%f", testPercentage), WHITE);
+        Text::DrawText(font, {600.f, 250.f}, Helpers::TextFormat("%f", testPercentage), WHITE);
 
 
 
@@ -578,7 +580,7 @@ void TestState::draw()
 
         if (Input::KeyPressed(SDLK_s)) {
 
-            Font font = Fonts::GetFont("assets/fonts/Rosarivo-Regular.ttf", 144);
+            Font font = Text::GetFont("assets/fonts/Rosarivo-Regular.ttf", 144);
 
             std::vector<std::string> characters;
 

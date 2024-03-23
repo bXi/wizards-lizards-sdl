@@ -6,21 +6,10 @@
 #include <vector>
 #include <utility>
 
-#include <utils/quadtree.h>
-#include <utils/vectors.h>
-#include <utils/lerp.h>
-#include <utils/colors.h>
-#include <utils/helpers.h>
-#include <utils/camera.h>
-
-#include "input/inputhandler.h"
-#include "audio/audiohandler.h"
-#include "fonts/fonthandler.h"
-#include "render2d/render2dhandler.h"
+#include "luminoveau.h"
+#include "utils/quadtree.h"
 
 #include "map/newdungeon.h"
-
-#include "texture/texturehandler.h"
 
 #include "box2d/box2d.h"
 #include "box2dobjects.h"
@@ -68,6 +57,8 @@ public:
 
 class TestState : public BaseState {
 	int maxWidth;
+
+    Font font;
 
 	std::map<Test, std::string> testList = {
 		{Test::Quadtree, "Quadtree"},

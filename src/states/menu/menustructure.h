@@ -4,10 +4,7 @@
 #include <list>
 #include <unordered_map>
 
-#include "fonts/fonthandler.h"
-
-#include "utils/vectors.h"
-#include "utils/colors.h"
+#include "luminoveau.h"
 
 #define NPATCH 20
 
@@ -15,6 +12,7 @@ class menuobject
 {
 private:
 	int npatch = NPATCH;
+
 
 public:
 	menuobject()
@@ -195,7 +193,9 @@ public:
 			if (items[topLeftItem + i].isActive)
 				text.append(" *");
 
-			Fonts::DrawText("assets/fonts/APL386.ttf", 18, {static_cast<float>(screenLocation.x), static_cast<float>(screenLocation.y)}, text.c_str(), WHITE);
+            Font menuFont = Text::GetFont("assets/fonts/APL386.ttf", 18);
+
+			Text::DrawText(menuFont, {static_cast<float>(screenLocation.x), static_cast<float>(screenLocation.y)}, text.c_str(), WHITE);
 
 			if (items[topLeftItem + i].HasChildren())
 			{
@@ -205,7 +205,7 @@ public:
 				//vi2d sourcePatch = { 3, 1 };
 				screenLocation = patchPos * npatch + screenOffset;
 				//pge.DrawPartialSprite(screenLocation, sprGFX, sourcePatch * npatch, vPatchSize);
-                Fonts::DrawText("assets/fonts/APL386.ttf", 18, {static_cast<float>(screenLocation.x), static_cast<float>(screenLocation.y)}, ">", WHITE);
+                Text::DrawText(menuFont, {static_cast<float>(screenLocation.x), static_cast<float>(screenLocation.y)}, ">", WHITE);
 
 			}
 		}
@@ -360,7 +360,8 @@ public:
 			p->DrawSelf(screenOffset);
 			screenOffset += {200, 0};
 		}
-        Fonts::DrawText("assets/fonts/APL386.ttf", 18, {static_cast<float>(panels.back()->GetCursorPosition().x), static_cast<float>(panels.back()->GetCursorPosition().y)}, "->", WHITE);
+        Font menuFont = Text::GetFont("assets/fonts/APL386.ttf", 18);
+        Text::DrawText(menuFont, {static_cast<float>(panels.back()->GetCursorPosition().x), static_cast<float>(panels.back()->GetCursorPosition().y)}, "->", WHITE);
 
 	}
 

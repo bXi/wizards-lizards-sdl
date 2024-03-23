@@ -379,7 +379,7 @@ void UI::DrawMiniMap(Texture texture) {
     constexpr int baseY = 270;
     int margin = 20;
 
-    //auto font = Fonts::GetFont("assets/fonts/APL386.ttf", 20);
+    //auto font = Text::GetFont("assets/fonts/APL386.ttf", 20);
 
     int y = 0;
 
@@ -414,10 +414,11 @@ void UI::DrawMiniMap(Texture texture) {
 
     Render2D::DrawRectangleRoundedFilled({backgroundRect.x, backgroundRect.y}, {backgroundRect.width, backgroundRect.height}, 10.f, {0, 0, 0, 127});
 
+    Font font = Text::GetFont("assets/fonts/APL386.ttf", 18);
 
     for (const auto &line: lines) {
-        Fonts::DrawText("assets/fonts/APL386.ttf", 18, vi2d(baseX, baseY + y), line.first.c_str(), LIME);
-        Fonts::DrawText("assets/fonts/APL386.ttf", 18, vi2d(baseX + Log::getHeaderWidth() + margin, baseY + y), line.second.c_str(), LIME);
+        Text::DrawText(font, vi2d(baseX, baseY + y), line.first.c_str(), LIME);
+        Text::DrawText(font, vi2d(baseX + Log::getHeaderWidth() + margin, baseY + y), line.second.c_str(), LIME);
 
         y += 25;
     }

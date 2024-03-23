@@ -23,6 +23,7 @@ target_link_libraries(libs INTERFACE nlohmann_json::nlohmann_json)
 
 set(ADD_IMGUI ${ADD_IMGUI} CACHE BOOL "Enable ImGui support" FORCE)
 
+message(add_imgui is ${ADD_IMGUI})
 add_subdirectory(bixxy-engine)
-target_link_libraries(libs INTERFACE bixxy-engine)
-target_include_directories(libs INTERFACE bixxy-engine)
+target_link_libraries(libs INTERFACE luminoveau)
+target_include_directories(libs INTERFACE luminoveau)

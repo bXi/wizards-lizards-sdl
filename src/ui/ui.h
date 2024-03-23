@@ -1,11 +1,10 @@
 #pragma once
 
-#include "utils/vectors.h"
-#include "utils/camera.h"
-#include <fonts/fonthandler.h>
+#include "luminoveau.h"
+
 #include "flecs.h"
 
-#include "render2d/render2dhandler.h"
+
 
 class UI {
 
