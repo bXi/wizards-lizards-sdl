@@ -29,15 +29,18 @@ struct AIController
 
 	void applyForce(const vf2d& desiredVelocity)
 	{
-		const b2Vec2 currentVelocity = self.get<RigidBody2D>()->RigidBody->GetLinearVelocity();
-		const b2Vec2 steering = b2Vec2(desiredVelocity.x, desiredVelocity.y) - currentVelocity;
+		const b2Vec2 currentVelocity = b2Body_GetLinearVelocity(self.get<RigidBody2D>()->RigidBodyId);
+		const b2Vec2 steering = desiredVelocity - currentVelocity;
 		const b2Vec2 force = b2Vec2(steering.x * maxSpeed, steering.y * maxSpeed);
-		self.get<RigidBody2D>()->RigidBody->ApplyForceToCenter(force, true);
+
+        b2Body_ApplyForceToCenter(self.get<RigidBody2D>()->RigidBodyId, force, true);
 	}
 
 	void seek()
 	{
-		const vf2d desired = vf2d(target.get<RigidBody2D>()->RigidBody->GetPosition() - self.get<RigidBody2D>()->RigidBody->GetPosition()).norm() * maxSpeed / Configuration::slowMotionFactor;
+        vf2d targetPos = b2Body_GetPosition(target.get<RigidBody2D>()->RigidBodyId);
+        vf2d currentPos = b2Body_GetPosition(self.get<RigidBody2D>()->RigidBodyId);
+		const vf2d desired = vf2d(targetPos - currentPos).norm() * maxSpeed / Configuration::slowMotionFactor;
 		applyForce(desired);
 	}
 

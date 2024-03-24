@@ -9,12 +9,16 @@
 int lastDungeonSize = 0;
 
 #include <ui/ui.h>
+//
+//b2Vec2 Gravity(0.0f, 98.0f);    // Y+ is down, so gravity is not negative
+//b2WorldDef worldDef = b2DefaultWorldDef();
 
-b2Vec2 Gravity(0.0f, 98.0f);    // Y+ is down, so gravity is not negative
-b2World World(Gravity);
 
 void TestState::load()
 {
+//    worldDef.gravity = Gravity;
+//    b2WorldId worldId = b2CreateWorld(&worldDef);
+
     Audio::GetMusic("assets/music/menu.mp3");
 
     Audio::GetSound("assets/sfx/slowmo-enter.wav");
@@ -39,9 +43,9 @@ void TestState::load()
 
 	dg = new DungeonGen();
 
-	Objects.push_back(new BoxObject(vf2d{ 0,-50 }, vf2d{ 10,10 }, RED, 45));
-	Objects.push_back(new BoxObject(vf2d{ 20,-60 }, vf2d{ 12,8 }, GREEN, 30));
-	Objects.push_back(new BoxObject(vf2d{ -20,-60 }, vf2d{ 8,12 }, BLUE, -30));
+//	Objects.push_back(new BoxObject(vf2d{ 0,-50 }, vf2d{ 10,10 }, RED, 45));
+//	Objects.push_back(new BoxObject(vf2d{ 20,-60 }, vf2d{ 12,8 }, GREEN, 30));
+//	Objects.push_back(new BoxObject(vf2d{ -20,-60 }, vf2d{ 8,12 }, BLUE, -30));
 
 	Camera::SetTarget({((float)(Window::GetWidth() - 300) / 2.0f) + 300 , (float)(Window::GetHeight() - 20)});
     //Camera::SetScale(4.f);
@@ -439,51 +443,51 @@ void TestState::draw()
 		if (Input::MouseButtonPressed(SDL_BUTTON_LEFT))
 		{
 
-			if (Input::KeyDown(SDLK_LSHIFT)) {
-				for (auto object : Objects) {
-					if (object->RigidBody->GetUserData().pointer) {
-
-						auto objPtr = object->RigidBody->GetUserData().pointer;
-
-						auto obj = reinterpret_cast<BallObject*>(objPtr);
-
-
-						b2Vec2 center = object->RigidBody->GetPosition();
-
-						auto mouseScreen = Camera::ToWorldSpace(Input::GetMousePosition());
-
-						b2Vec2 mouse = { (float)mouseScreen.x, (float)mouseScreen.y };
-						b2Vec2 distance = mouse - center;
-
-						if (distance.Length() < obj->Radius) {
-							obj->Radius *= 2.0f;
-
-							b2Fixture* fixtureA = obj->RigidBody->GetFixtureList();
-							obj->RigidBody->DestroyFixture(fixtureA);
-
-							b2CircleShape circleShape;
-							circleShape.m_radius = obj->Radius;
-
-							b2FixtureDef fixtureDef;
-							fixtureDef.shape = &circleShape;
-							fixtureDef.density = 1;
-							fixtureDef.friction = 0.3f;
-							obj->RigidBody->CreateFixture(&fixtureDef);
-
-
-						}
-					}
-
-				}
-			}
-			else {
-				Objects.push_back(new BallObject(pos, 3, PINK));
-
-			}
+//			if (Input::KeyDown(SDLK_LSHIFT)) {
+//				for (auto object : Objects) {
+//					if (object->RigidBody->GetUserData().pointer) {
+//
+//						auto objPtr = object->RigidBody->GetUserData().pointer;
+//
+//						auto obj = reinterpret_cast<BallObject*>(objPtr);
+//
+//
+//						b2Vec2 center = object->RigidBody->GetPosition();
+//
+//						auto mouseScreen = Camera::ToWorldSpace(Input::GetMousePosition());
+//
+//						b2Vec2 mouse = { (float)mouseScreen.x, (float)mouseScreen.y };
+//						b2Vec2 distance = mouse - center;
+//
+//						if (distance.Length() < obj->Radius) {
+//							obj->Radius *= 2.0f;
+//
+//							b2Fixture* fixtureA = obj->RigidBody->GetFixtureList();
+//							obj->RigidBody->DestroyFixture(fixtureA);
+//
+//							b2CircleShape circleShape;
+//							circleShape.m_radius = obj->Radius;
+//
+//							b2FixtureDef fixtureDef;
+//							fixtureDef.shape = &circleShape;
+//							fixtureDef.density = 1;
+//							fixtureDef.friction = 0.3f;
+//							obj->RigidBody->CreateFixture(&fixtureDef);
+//
+//
+//						}
+//					}
+//
+//				}
+//			}
+//			else {
+//				Objects.push_back(new BallObject(pos, 3, PINK));
+//
+//			}
 		}
 		if (Input::MouseButtonPressed(SDL_BUTTON_RIGHT))
 		{
-			Objects.push_back(new BoxObject(pos, vf2d{ float(Helpers::GetRandomValue(10,20)),float(Helpers::GetRandomValue(10,20)) }, DARKRED, float(Helpers::GetRandomValue(0, 180))));
+//			Objects.push_back(new BoxObject(pos, vf2d{ float(Helpers::GetRandomValue(10,20)),float(Helpers::GetRandomValue(10,20)) }, DARKRED, float(Helpers::GetRandomValue(0, 180))));
 		}
 
 		// update the world for the new frame
@@ -491,7 +495,7 @@ void TestState::draw()
 		while (accumulator >= physTime)
 		{
 			accumulator -= physTime;
-			World.Step(physTime, velocityIterations, positionIterations);
+//			World.Step(physTime, velocityIterations, positionIterations);
 		}
 
 

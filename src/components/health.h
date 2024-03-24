@@ -19,7 +19,11 @@ struct Health
 		auto rigidBody2d = entity.get<RigidBody2D>();
 		auto sprite = entity.get<Sprite>();
 
-		UI::drawSmallBar(rigidBody2d->RigidBody->GetPosition(), { static_cast<int>(-(sprite->width / 2) + 2), static_cast<int>(-(sprite->height + 4 - healthBarYOffset)) }, 28, 6, RED, currentHealth / maxHealth);
+        vf2d pos;
+
+        pos = b2Body_GetPosition(rigidBody2d->RigidBodyId);
+
+		UI::drawSmallBar(pos, { static_cast<int>(-(sprite->width / 2) + 2), static_cast<int>(-(sprite->height + 4 - healthBarYOffset)) }, 28, 6, RED, currentHealth / maxHealth);
 
 
 	}

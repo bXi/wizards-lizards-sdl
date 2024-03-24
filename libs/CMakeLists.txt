@@ -8,10 +8,10 @@ target_link_libraries(libs INTERFACE flecs::flecs_static)
 
 #box2d
 set(BOX2D_BUILD_TESTBED OFF CACHE BOOL "Disable box2d test")
-add_subdirectory(box2d)
+add_subdirectory(box2c)
 target_link_libraries(libs INTERFACE box2d)
 
-#box2d
+#json
 add_subdirectory(json)
 target_link_libraries(libs INTERFACE nlohmann_json::nlohmann_json)
 

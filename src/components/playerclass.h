@@ -75,13 +75,13 @@ struct PlayerClass
 		float radius = 5.f;
 		float forceMagnitude = 4500.f;
 
-		vf2d pos = rigidBody2d->RigidBody->GetPosition();
+		vf2d pos = b2Body_GetPosition(rigidBody2d->RigidBodyId);
 
 		const auto enemyFilter = ECS::getWorld().filter<EnemyEntity>();
 		enemyFilter.each([&](flecs::entity enemy, EnemyEntity renderer) {
 			auto* enemyRigidBody2d = enemy.get<RigidBody2D>();
 
-			vf2d monsterPosition = enemyRigidBody2d->RigidBody->GetPosition();  // Assuming the monster has a rigid body
+			vf2d monsterPosition = b2Body_GetPosition(enemyRigidBody2d->RigidBodyId);  // Assuming the monster has a rigid body
 
 			float distance = (pos - monsterPosition).mag();
 			if (distance <= radius) {
@@ -90,7 +90,7 @@ struct PlayerClass
 				vf2d force = forceDirection * forceMagnitude;
 
 				// Apply the force to the monster's body
-				enemyRigidBody2d->RigidBody->ApplyForceToCenter(force, true);  // Assuming Box2D is used for physics simulation
+                b2Body_ApplyForceToCenter(enemyRigidBody2d->RigidBodyId, force, true);
 			}
 
 		});

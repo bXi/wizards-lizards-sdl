@@ -105,8 +105,8 @@ class TestState : public BaseState {
     vf2d groundSize = { 100, 2 };    // save a vector of our ground size, so we know what to draw
 	float accumulator = 0;
 	float physTime = 1 / 160.0f;
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
+	Uint32 velocityIterations = 6;
+	Uint32 positionIterations = 2;
 
     Texture dungeonTileset;
 

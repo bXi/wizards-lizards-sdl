@@ -26,27 +26,29 @@ void CreatePlayerEntity(int index, vf2d pos) {
 
 
 
-	b2Body* RigidBody = nullptr;
+	b2BodyId RigidBodyId;
 
-	b2CircleShape CircleShape;
-	CircleShape.m_radius = 0.5f;
+	b2Circle CircleShape;
+	CircleShape.radius = 0.5f;
 
 	auto userData = std::make_unique<UserData>();
 	userData->entity_id = entity.id();
 
-	b2BodyDef bodyDef;
+	b2BodyDef bodyDef = b2DefaultBodyDef();
 	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(pos.x, pos.y);
-	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(userData.get());
-	RigidBody = World::createBody(&bodyDef);
+	bodyDef.position = pos;
+	bodyDef.userData = userData.get();
 
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &CircleShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	RigidBody->CreateFixture(&fixtureDef);
+	RigidBodyId = World::createBody(&bodyDef);
+
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+
+    shapeDef.density = 1.0f;
+	shapeDef.friction = 0.3f;
+
+    b2CreateCircleShape(RigidBodyId, &shapeDef, &CircleShape);
 	
-	entity.emplace<RigidBody2D>(RigidBody);
+	entity.emplace<RigidBody2D>(RigidBodyId);
 
 
 	entity.set<UserDataComponent>({ std::move(userData) });

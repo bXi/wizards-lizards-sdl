@@ -132,9 +132,10 @@ struct PlayerInput
 
 				if (controller->is(Buttons::SHOOT, Action::HELD)) {
 					const vf2d mouseScreenPos = Input::GetMousePosition();
+                    const vf2d playerPos = b2Body_GetPosition(rigidBody2d->RigidBodyId);
 					const vf2d playerScreenPos = Camera::ToScreenSpace({
-						rigidBody2d->RigidBody->GetPosition().x * static_cast<float>(Configuration::tileWidth),
-						rigidBody2d->RigidBody->GetPosition().y * static_cast<float>(Configuration::tileHeight)
+						playerPos.x * static_cast<float>(Configuration::tileWidth),
+						playerPos.y * static_cast<float>(Configuration::tileHeight)
 						});
 					aim = {
 						playerScreenPos.x - (mouseScreenPos.x + static_cast<float>(Configuration::tileWidth) * 0.5f),

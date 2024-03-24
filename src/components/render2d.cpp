@@ -39,7 +39,7 @@ void Render2DComp::draw(flecs::entity* entity)
 			renderFrame = 24;
 		}*/
 
-		const vf2d pos = rigidBody->RigidBody->GetPosition();
+		const vf2d pos = b2Body_GetPosition(rigidBody->RigidBodyId);
 
 		const rectf position = {
 			pos.x * static_cast<float>(Configuration::tileWidth) - sprite->originX,

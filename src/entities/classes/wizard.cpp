@@ -31,7 +31,7 @@ void WizardClass::shoot(flecs::entity entity)
 	auto dungeon = World::getDungeon();
 
 
-	auto pos = rigidBody2d->RigidBody->GetPosition();
+	vf2d pos = b2Body_GetPosition(rigidBody2d->RigidBodyId);
 	auto aim = player->aim;
 
 	switch (player->selectedWeapon) {
@@ -303,8 +303,8 @@ void WizardClass::shoot(flecs::entity entity)
 					const float fLineX1 = edge.ex - edge.sx;
 					const float fLineY1 = edge.ey - edge.sy;
 
-					const float fLineX2 = rigidBody2d->RigidBody->GetPosition().x - edge.sx;
-					const float fLineY2 = rigidBody2d->RigidBody->GetPosition().y - edge.sy;
+					const float fLineX2 = b2Body_GetPosition(rigidBody2d->RigidBodyId).x - edge.sx;
+					const float fLineY2 = b2Body_GetPosition(rigidBody2d->RigidBodyId).y - edge.sy;
 
 					const float fEdgeLength = fLineX1 * fLineX1 + fLineY1 * fLineY1;
 
@@ -313,7 +313,7 @@ void WizardClass::shoot(flecs::entity entity)
 					const float fClosestPointX = edge.sx + t * fLineX1;
 					const float fClosestPointY = edge.sy + t * fLineY1;
 
-					const float fDistance = sqrtf((rigidBody2d->RigidBody->GetPosition().x - fClosestPointX) * (rigidBody2d->RigidBody->GetPosition().x - fClosestPointX) + (rigidBody2d->RigidBody->GetPosition().y - fClosestPointY) * (rigidBody2d->RigidBody->GetPosition().y - fClosestPointY));
+					const float fDistance = sqrtf((b2Body_GetPosition(rigidBody2d->RigidBodyId).x - fClosestPointX) * (b2Body_GetPosition(rigidBody2d->RigidBodyId).x - fClosestPointX) + (b2Body_GetPosition(rigidBody2d->RigidBodyId).y - fClosestPointY) * (b2Body_GetPosition(rigidBody2d->RigidBodyId).y - fClosestPointY));
 
 					if (fDistance <= (rigidBody2d->radius + edge.radius)) {
 						health->currentHealth -= (2 * (damage + 1));

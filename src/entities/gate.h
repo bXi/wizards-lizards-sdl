@@ -22,10 +22,10 @@ struct GateEntity {
 
         entity.get_mut<RenderFrame>()->RenderFrameNumber = 20;
 
-        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
-        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
-            fixture->SetSensor(false);
-        }
+//        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
+//        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
+//            fixture->SetSensor(false);
+//        }
 
         entity.get_mut<DeleteBulletsOnHit>()->disable = false;
 
@@ -35,10 +35,10 @@ struct GateEntity {
 
         entity.get_mut<RenderFrame>()->RenderFrameNumber = 16;
 
-        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
-        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
-            fixture->SetSensor(true);
-        }
+//        auto fixtures = entity.get_mut<RigidBody2D>()->RigidBody->GetFixtureList();
+//        for (b2Fixture* fixture = fixtures; fixture; fixture = fixture->GetNext()) {
+//            fixture->SetSensor(true);
+//        }
 
         entity.get_mut<DeleteBulletsOnHit>()->disable = true;
     }

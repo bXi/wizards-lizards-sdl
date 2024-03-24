@@ -20,7 +20,7 @@ int PlayerClass::getRenderFrame(flecs::entity* entity)
 
 	frame = (static_cast<int>(Window::GetRunTime() * 10.0f)) % frameCount;
 
-	if (rigidBody->RigidBody->GetLinearVelocity().LengthSquared() > 0) {
+	if (vf2d(b2Body_GetLinearVelocity(rigidBody->RigidBodyId)).mag2() > 0) {
 		startFrame += 4;
 	}
 

@@ -20,19 +20,20 @@ struct Collision
 
 	void init(flecs::entity* entity)
 	{
-		auto* rigidBody = entity->get_mut<RigidBody2D>()->RigidBody;
+//		auto rigidBody = entity->get_mut<RigidBody2D>()->RigidBodyId;
 
 
-		b2Filter filter;
-		filter.categoryBits = category;
-		filter.maskBits = mask;
+//		b2Filter filter;
+//		filter.categoryBits = category;
+//		filter.maskBits = mask;
 
 		// Set the collision filtering for all fixtures
-		b2Fixture* fixture = rigidBody->GetFixtureList();
-		while (fixture != nullptr) {
-			fixture->SetFilterData(filter);
-			fixture = fixture->GetNext();
-		}
+        //TODO: fix this
+//		b2Fixture* fixture = b2Ge;
+//		while (fixture != nullptr) {
+//			fixture->SetFilterData(filter);
+//			fixture = fixture->GetNext();
+//		}
 	}
 	
 };

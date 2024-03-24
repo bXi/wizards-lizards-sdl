@@ -91,10 +91,10 @@ void GameState::resetGame()
 
 	const auto playerFilter = ECS::getWorld().filter<PlayerIndex>();
 	playerFilter.each([&](flecs::entity entity, PlayerIndex index){
-		auto* rigidBody = entity.get<RigidBody2D>()->RigidBody;
+		auto rigidBodyId = entity.get<RigidBody2D>()->RigidBodyId;
 
 		//rigidBody->SetTransform(World::getStart(), rigidBody->GetAngle());
-		camPos += rigidBody->GetPosition();
+		camPos += b2Body_GetPosition(rigidBodyId);
 	});
 
 	Camera::SetTarget({ (camPos.x / static_cast<float>(playerFilter.count())) * static_cast<float>(Configuration::tileWidth), (camPos.y / static_cast<float>(playerFilter.count())) * static_cast<float>(Configuration::tileHeight) });
@@ -179,9 +179,9 @@ void GameState::draw()
 
 		newSpeed /= Configuration::slowMotionFactor;
 
-		rigidBody2d->RigidBody->SetLinearVelocity(input->vel * newSpeed);
+        b2Body_SetLinearVelocity(rigidBody2d->RigidBodyId, input->vel * newSpeed);
+		camPos += b2Body_GetPosition(rigidBody2d->RigidBodyId);
 
-		camPos += rigidBody2d->RigidBody->GetPosition();
 	});
 
 
@@ -275,12 +275,12 @@ X
 
 	}*/
 
-	accumulator += (float)Window::GetFrameTime();
-	while (accumulator >= physTime)
-	{
-		accumulator -= physTime;
+//	accumulator += (float)Window::GetFrameTime();
+//	while (accumulator >= physTime)
+//	{
+//		accumulator -= physTime;
 		World::doStep(physTime, velocityIterations, positionIterations);
-	}
+//	}
 
 	Render2D::BeginMode2D();
 
@@ -415,15 +415,14 @@ void GameState::drawEntities()
 	const auto renderFilter = ECS::getWorld().filter<Render2DComp>();
 	renderFilter.each([&](flecs::entity entity, Render2DComp renderer) {
 		renderableEntities.push_back(entity);
-		renderer.draw(&entity);
 	});
 
-	std::sort(renderableEntities.begin(), renderableEntities.end(),
-		[](const flecs::entity& entity1, const flecs::entity& entity2) {
-			const vf2d pos1 = entity1.get<RigidBody2D>()->RigidBody->GetPosition();
-			const vf2d pos2 = entity2.get<RigidBody2D>()->RigidBody->GetPosition();
-			return pos1.y < pos2.y;
-		});
+//	std::sort(renderableEntities.begin(), renderableEntities.end(),
+//		[](const flecs::entity& entity1, const flecs::entity& entity2) {
+//			const vf2d pos1 = b2Body_GetPosition(entity1.get<RigidBody2D>()->RigidBodyId);
+//			const vf2d pos2 = b2Body_GetPosition(entity2.get<RigidBody2D>()->RigidBodyId);
+//			return pos1.y < pos2.y;
+//		});
 
 	for (auto& entity : renderableEntities) {
 		entity.get_mut<Render2DComp>()->draw(&entity);

@@ -10,10 +10,10 @@ enable_language(CXX)
 
 set(CMAKE_C_STANDARD 23)
 
-option(ADD_IMGUI "Enable ImGui support" ON)
-set(ADD_IMGUI ${ADD_IMGUI} CACHE BOOL "Enable ImGui support" FORCE)
-add_compile_definitions(ADD_IMGUI)
 
+set(ADD_IMGUI ${ADD_IMGUI} CACHE BOOL "Enable ImGui support" FORCE)
+#add_compile_definitions(ADD_IMGUI)
+option(ADD_IMGUI "Enable ImGui support" ON)
 if (EMSCRIPTEN)
     message("EMSCRIPTEN BUILD!!!")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -sUSE_PTHREADS -pthread -msimd128 -sUSE_SDL=3 -sUSE_SDL_MIXER=3")

@@ -28,8 +28,8 @@ private:
 
 	float accumulator = 0;
 	float physTime = 1.f; // static_cast<float>(Settings::getMonitorRefreshRate());
-	int32 velocityIterations = 6;
-	int32 positionIterations = 2;
+	Uint32 velocityIterations = 6;
+	Uint32 positionIterations = 2;
 
 	//Music backgroundMusic;
 

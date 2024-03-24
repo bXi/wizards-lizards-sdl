@@ -1,7 +1,7 @@
 #include "lizard.h"
 
 void CreateLizardEntity(vf2d pos, float maxHealth) {
-
+return;
 	const auto& ecs = ECS::getWorld();
 
 	Texture sprite = Textures::GetTexture("assets/monsters/lizard/lizard.png");
@@ -16,29 +16,29 @@ void CreateLizardEntity(vf2d pos, float maxHealth) {
 		.set<Render2DComp>({  });
 
 	
-	b2Body* RigidBody = nullptr;
-
-	b2CircleShape CircleShape;
-	CircleShape.m_radius = 0.5f;
-
-	auto userData = std::make_unique<UserData>();
-	userData->entity_id = entity.id();
-
-	b2BodyDef bodyDef;
-	bodyDef.type = b2_dynamicBody;
-	bodyDef.position.Set(pos.x, pos.y);
-	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(userData.get());
-	RigidBody = World::createBody(&bodyDef);
-
-	b2FixtureDef fixtureDef;
-	fixtureDef.shape = &CircleShape;
-	fixtureDef.density = 1.0f;
-	fixtureDef.friction = 0.3f;
-	RigidBody->CreateFixture(&fixtureDef);
-
-	entity.emplace<RigidBody2D>(RigidBody, CircleShape.m_radius);
-
-	entity.set<UserDataComponent>({ std::move(userData) });
+//	b2Body* RigidBody = nullptr;
+//
+//	b2CircleShape CircleShape;
+//	CircleShape.m_radius = 0.5f;
+//
+//	auto userData = std::make_unique<UserData>();
+//	userData->entity_id = entity.id();
+//
+//	b2BodyDef bodyDef;
+//	bodyDef.type = b2_dynamicBody;
+//	bodyDef.position.Set(pos.x, pos.y);
+//	bodyDef.userData.pointer = reinterpret_cast<uintptr_t>(userData.get());
+//	RigidBody = World::createBody(&bodyDef);
+//
+//	b2FixtureDef fixtureDef;
+//	fixtureDef.shape = &CircleShape;
+//	fixtureDef.density = 1.0f;
+//	fixtureDef.friction = 0.3f;
+//	RigidBody->CreateFixture(&fixtureDef);
+//
+//	entity.emplace<RigidBody2D>(RigidBody, CircleShape.m_radius);
+//
+//	entity.set<UserDataComponent>({ std::move(userData) });
 
 	entity.get_mut<AIController>()->self = entity;
 

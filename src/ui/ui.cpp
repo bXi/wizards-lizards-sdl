@@ -99,7 +99,7 @@ void UI::drawTimerBar() {
 
     auto player = entity.get_mut<PlayerInput>();
 
-    auto rigidBody2d = entity.get_mut<RigidBody2D>()->RigidBody;
+    auto rigidBody2d = entity.get_mut<RigidBody2D>()->RigidBodyId;
     auto playerClass = entity.get<PlayerClass>();
 
     std::vector<int> weaponIcon = {0, 0, 0, 0};
@@ -137,7 +137,7 @@ void UI::drawTimerBar() {
 
     Log::AddLine("Campos:", Helpers::TextFormat("X: %.2f Y: %.2f", Camera::GetTarget().x, Camera::GetTarget().y));
 
-    vf2d worldPos = Camera::ToScreenSpace((vf2d) rigidBody2d->GetPosition() * 32);
+    vf2d worldPos = Camera::ToScreenSpace((vf2d) b2Body_GetPosition(rigidBody2d) * 32);
 
     float selectedWeaponAngleOffset = -((static_cast<float>(player->selectedWeapon - 1) / static_cast<float>(weaponCount)) * 2 * PI) + (PI / 2) * 3;
 
@@ -347,9 +347,8 @@ void UI::DrawMiniMap(Texture texture) {
 
     const auto playerFilter = ECS::getWorld().filter<PlayerIndex>();
     playerFilter.each([&](flecs::entity entity, PlayerIndex index) {
-        auto *rigidBody2D = entity.get_mut<RigidBody2D>()->RigidBody;
 
-        vf2d pos = rigidBody2D->GetPosition();
+        vf2d pos = b2Body_GetPosition(entity.get_mut<RigidBody2D>()->RigidBodyId);
 
         pos.x *= static_cast<float>(miniMapSize) / static_cast<float>(data.width);
         pos.y *= static_cast<float>(miniMapSize) / static_cast<float>(data.height);
@@ -387,7 +386,7 @@ void UI::DrawMiniMap(Texture texture) {
     Log::AddLine("FPS:", Helpers::TextFormat("%d", Window::GetFPS()));
 
     Log::AddLine("GameTime:", Helpers::TextFormat("%.2f", Configuration::gameTime));
-    Log::AddLine("Bodies:", Helpers::TextFormat("%d", World::getPhysicsWorld().GetBodyCount()));
+//    Log::AddLine("Bodies:", Helpers::TextFormat("%d", World::getPhysicsWorld().GetBodyCount()));
     Log::AddLine("SlowMoF:", Helpers::TextFormat("%f", Configuration::slowMotionFactor));
 
 
@@ -398,8 +397,8 @@ void UI::DrawMiniMap(Texture texture) {
     playerFilter.each([&](flecs::entity entity, PlayerIndex playerIndex, RigidBody2D rigidBody2D) {
         Log::AddLine(
                 Helpers::TextFormat("Player %d pos:", playerIndex.index),
-                Helpers::TextFormat("X: %.2f Y: %.2f", rigidBody2D.RigidBody->GetPosition().x,
-                           rigidBody2D.RigidBody->GetPosition().y)
+                Helpers::TextFormat("X: %.2f Y: %.2f", b2Body_GetPosition(rigidBody2D.RigidBodyId).x,
+                           b2Body_GetPosition(rigidBody2D.RigidBodyId).y)
         );
     });
 

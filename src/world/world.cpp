@@ -18,21 +18,21 @@ PhysicsWall::PhysicsWall(const vf2d& pos, const vf2d& size)
     HalfSize.x = size.x / 2;
     HalfSize.y = size.y / 2;
 
-    b2BodyDef bodyDef;
+    b2BodyDef bodyDef = b2DefaultBodyDef();
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(pos.x, pos.y);
+    bodyDef.position = b2Vec2(pos.x, pos.y);
     bodyDef.angle = 0.0f;
-    bodyDef.userData.pointer = 0;
-    RigidBody = World::createBody(&bodyDef);
 
-    Box.SetAsBox(Size.x / 2, Size.y / 2);
+    RigidBodyId = World::createBody(&bodyDef);
 
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &Box;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
+    Box = b2MakeBox(Size.x, Size.y);
 
-    RigidBody->CreateFixture(&fixtureDef);
+    b2ShapeDef shapeDef = b2DefaultShapeDef();
+    shapeDef.density = 1.0f;
+    shapeDef.friction = 0.3f;
+
+//    b2ShapeId shapeId =
+            b2CreatePolygonShape(RigidBodyId, &shapeDef, &Box);
 }
 
 void PhysicsWall::draw()
@@ -40,10 +40,10 @@ void PhysicsWall::draw()
     return;
 
     auto origin = (vf2d)HalfSize * vi2d(Configuration::tileWidth, Configuration::tileHeight);
-    rectf rec = {RigidBody->GetPosition().x * Configuration::tileWidth, RigidBody->GetPosition().y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
+    vf2d pos = b2Body_GetPosition(RigidBodyId);
+    rectf rec = {pos.x * Configuration::tileWidth, pos.y * Configuration::tileHeight, Size.x * Configuration::tileWidth, Size.y * Configuration::tileHeight };
 
-    vf2d pos = vf2d{rec.x, rec.y} + origin;
-    Render2D::DrawRectangle(pos, {rec.width, rec.height}, ShapeColor);
+    Render2D::DrawRectangle(vf2d{rec.x, rec.y} + origin, {rec.width, rec.height}, ShapeColor);
     
 }
 
@@ -93,10 +93,10 @@ void World::_generateNewMap()
     }
 }
 
-void World::handleCollision(b2Contact* contact, bool beginCollision)
-{
-
-}
+//void World::handleCollision(b2Contact* contact, bool beginCollision)
+//{
+//
+//}
 
 //CREDIT: piratux on Javids Discord
 std::vector<rectf> World::mergeWalls(const std::vector<Tile>& map, int width, int height) {
@@ -259,158 +259,158 @@ std::vector<rectf> World::mergeWalls(const std::vector<Tile>& map, int width, in
 void World::_removeObject(PhysicsObject* object)
 {
 
-    auto it = std::find(objects.begin(), objects.end(), object);
-    if (it != objects.end()) {
-        b2Body* body = object->RigidBody;
-
-        // Delete the fixtures attached to the body
-        b2Fixture* fixture = body->GetFixtureList();
-        while (fixture) {
-            b2Fixture* nextFixture = fixture->GetNext();
-            body->DestroyFixture(fixture);
-            fixture = nextFixture;
-        }
-
-        body->GetWorld()->DestroyBody(body);
-
-        objects.erase(it);
-        delete object;
-    }
-
-}
-
-
-void World::BeginContact(b2Contact* contact)
-{
-    // Get the fixtures involved in the contact
-    b2Fixture* fixtureA = contact->GetFixtureA();
-    b2Fixture* fixtureB = contact->GetFixtureB();
-
-    // Get the bodies associated with the fixtures
-    b2Body* bodyA = fixtureA->GetBody();
-    b2Body* bodyB = fixtureB->GetBody();
-
-    // Get the user data of the bodies (assuming they store pointers)
-    UserData* userDataA = reinterpret_cast<UserData*>(bodyA->GetUserData().pointer);
-    UserData* userDataB = reinterpret_cast<UserData*>(bodyB->GetUserData().pointer);
-
-
-    if (userDataA && !userDataB) {
-        flecs::entity entityA = ECS::getWorld().entity(userDataA->entity_id);
-        if (entityA.has<FireballEntity>() && bodyB->GetType() == b2_staticBody) {
-            entityA.set<DeleteMe>({});
-        }
-    }
-    else if (!userDataA && userDataB) {
-        flecs::entity entityB = ECS::getWorld().entity(userDataB->entity_id);
-
-        if (
-            entityB.has<FireballEntity>() &&
-            bodyA->GetType() == b2_staticBody)
-        {
-            entityB.set<DeleteMe>({});
-        }
-    }
-    else if (userDataA && userDataB) {
-        flecs::entity entityA = ECS::getWorld().entity(userDataA->entity_id);
-        flecs::entity entityB = ECS::getWorld().entity(userDataB->entity_id);
-
-        if (entityA.has<EnemyEntity>() && entityB.has<EnemyEntity>()) return;
-
-        flecs::entity* player = nullptr;
-        flecs::entity* fireball = nullptr;
-        flecs::entity* enemy = nullptr;
-        flecs::entity* other = nullptr;
-        flecs::entity* sensor = nullptr;
-
-        bool doFireball = false;
-        bool doPlayerHit = false;
-        bool doDeleteBulletsOnHit = false;
-        bool doSensor = false;
-
-        // Perform collision handling based on the entity types
-        if (entityA.has<EnemyEntity>() && entityB.has<FireballEntity>()) {
-            enemy = &entityA;
-            fireball = &entityB;
-            doFireball = true;
-        }
-        else if (entityA.has<FireballEntity>() && entityB.has<EnemyEntity>()) {
-            fireball = &entityA;
-            enemy = &entityB;
-            doFireball = true;
-        }
-        else if (entityA.has<PlayerEntity>() && entityB.has<EnemyEntity>()) {
-            player = &entityA;
-            enemy = &entityB;
-            doPlayerHit = true;
-        }
-        else if (entityA.has<EnemyEntity>() && entityB.has<PlayerEntity>()) {
-            enemy = &entityA;
-            player = &entityB;
-            doPlayerHit = true;
-        }
-
-        else if (entityA.has<PlayerEntity>() && entityB.has<RoomSensorEntity>()) {
-            player = &entityA;
-            sensor = &entityB;
-            doSensor = true;
-        }
-        else if (entityA.has<RoomSensorEntity>() && entityB.has<PlayerEntity>()) {
-            sensor = &entityA;
-            player = &entityB;
-            doSensor = true;
-        }
-
-        else if (entityA.has<FireballEntity>()) {
-            fireball = &entityA;
-            other = &entityB;
-            doDeleteBulletsOnHit = true;
-        }
-        else if (entityB.has<FireballEntity>()) {
-            fireball = &entityB;
-            other = &entityA;
-            doDeleteBulletsOnHit = true;
-        }
-
-
-
-
-        if (doFireball && enemy) {
-            flecs::entity owner = ECS::getWorld().entity(fireball->get<Owner>()->owner_id);
-        	owner.get_mut<PlayerClass>()->doDamage(enemy, 1);
-        	fireball->set<DeleteMe>({});
-            enemy->get_mut<Health>()->currentHealth -= 10.f;
-        }
-
-
-        if (doSensor) {
-            std::vector<flecs::entity> gateCloseEntities;
-
-            const auto gates = ECS::getWorld().filter<GateEntity>();
-            gates.each([&](flecs::entity entity, GateEntity gate) {
-                if (gate.roomId == sensor->get<RoomSensorEntity>()->roomId) {
-                    if (!gate.closed) {
-                        gateCloseEntities.push_back(entity);
-                    }
-                }
-            });
-            for (auto entity : gateCloseEntities) entity.get_mut<GateEntity>()->close(entity);
-        }
-
-        if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>() && !other->get<DeleteBulletsOnHit>()->disable) {
-            fireball->set<DeleteMe>({});
-        }
-
-        if (doPlayerHit && enemy) {
-            player->get_mut<PlayerClass>()->playerHit(player);
-        }
-    } else
-    {
-	    
-    }
-
+//    auto it = std::find(objects.begin(), objects.end(), object);
+//    if (it != objects.end()) {
+//        b2Body* body = object->RigidBody;
+//
+//        // Delete the fixtures attached to the body
+//        b2Fixture* fixture = body->GetFixtureList();
+//        while (fixture) {
+//            b2Fixture* nextFixture = fixture->GetNext();
+//            body->DestroyFixture(fixture);
+//            fixture = nextFixture;
+//        }
+//
+//        body->GetWorld()->DestroyBody(body);
+//
+//        objects.erase(it);
+//        delete object;
+//    }
 
 }
+
+//
+//void World::BeginContact(b2Contact* contact)
+//{
+//    // Get the fixtures involved in the contact
+//    b2Fixture* fixtureA = contact->GetFixtureA();
+//    b2Fixture* fixtureB = contact->GetFixtureB();
+//
+//    // Get the bodies associated with the fixtures
+//    b2Body* bodyA = fixtureA->GetBody();
+//    b2Body* bodyB = fixtureB->GetBody();
+//
+//    // Get the user data of the bodies (assuming they store pointers)
+//    UserData* userDataA = reinterpret_cast<UserData*>(bodyA->GetUserData().pointer);
+//    UserData* userDataB = reinterpret_cast<UserData*>(bodyB->GetUserData().pointer);
+//
+//
+//    if (userDataA && !userDataB) {
+//        flecs::entity entityA = ECS::getWorld().entity(userDataA->entity_id);
+//        if (entityA.has<FireballEntity>() && bodyB->GetType() == b2_staticBody) {
+//            entityA.set<DeleteMe>({});
+//        }
+//    }
+//    else if (!userDataA && userDataB) {
+//        flecs::entity entityB = ECS::getWorld().entity(userDataB->entity_id);
+//
+//        if (
+//            entityB.has<FireballEntity>() &&
+//            bodyA->GetType() == b2_staticBody)
+//        {
+//            entityB.set<DeleteMe>({});
+//        }
+//    }
+//    else if (userDataA && userDataB) {
+//        flecs::entity entityA = ECS::getWorld().entity(userDataA->entity_id);
+//        flecs::entity entityB = ECS::getWorld().entity(userDataB->entity_id);
+//
+//        if (entityA.has<EnemyEntity>() && entityB.has<EnemyEntity>()) return;
+//
+//        flecs::entity* player = nullptr;
+//        flecs::entity* fireball = nullptr;
+//        flecs::entity* enemy = nullptr;
+//        flecs::entity* other = nullptr;
+//        flecs::entity* sensor = nullptr;
+//
+//        bool doFireball = false;
+//        bool doPlayerHit = false;
+//        bool doDeleteBulletsOnHit = false;
+//        bool doSensor = false;
+//
+//        // Perform collision handling based on the entity types
+//        if (entityA.has<EnemyEntity>() && entityB.has<FireballEntity>()) {
+//            enemy = &entityA;
+//            fireball = &entityB;
+//            doFireball = true;
+//        }
+//        else if (entityA.has<FireballEntity>() && entityB.has<EnemyEntity>()) {
+//            fireball = &entityA;
+//            enemy = &entityB;
+//            doFireball = true;
+//        }
+//        else if (entityA.has<PlayerEntity>() && entityB.has<EnemyEntity>()) {
+//            player = &entityA;
+//            enemy = &entityB;
+//            doPlayerHit = true;
+//        }
+//        else if (entityA.has<EnemyEntity>() && entityB.has<PlayerEntity>()) {
+//            enemy = &entityA;
+//            player = &entityB;
+//            doPlayerHit = true;
+//        }
+//
+//        else if (entityA.has<PlayerEntity>() && entityB.has<RoomSensorEntity>()) {
+//            player = &entityA;
+//            sensor = &entityB;
+//            doSensor = true;
+//        }
+//        else if (entityA.has<RoomSensorEntity>() && entityB.has<PlayerEntity>()) {
+//            sensor = &entityA;
+//            player = &entityB;
+//            doSensor = true;
+//        }
+//
+//        else if (entityA.has<FireballEntity>()) {
+//            fireball = &entityA;
+//            other = &entityB;
+//            doDeleteBulletsOnHit = true;
+//        }
+//        else if (entityB.has<FireballEntity>()) {
+//            fireball = &entityB;
+//            other = &entityA;
+//            doDeleteBulletsOnHit = true;
+//        }
+//
+//
+//
+//
+//        if (doFireball && enemy) {
+//            flecs::entity owner = ECS::getWorld().entity(fireball->get<Owner>()->owner_id);
+//        	owner.get_mut<PlayerClass>()->doDamage(enemy, 1);
+//        	fireball->set<DeleteMe>({});
+//            enemy->get_mut<Health>()->currentHealth -= 10.f;
+//        }
+//
+//
+//        if (doSensor) {
+//            std::vector<flecs::entity> gateCloseEntities;
+//
+//            const auto gates = ECS::getWorld().filter<GateEntity>();
+//            gates.each([&](flecs::entity entity, GateEntity gate) {
+//                if (gate.roomId == sensor->get<RoomSensorEntity>()->roomId) {
+//                    if (!gate.closed) {
+//                        gateCloseEntities.push_back(entity);
+//                    }
+//                }
+//            });
+//            for (auto entity : gateCloseEntities) entity.get_mut<GateEntity>()->close(entity);
+//        }
+//
+//        if (doDeleteBulletsOnHit && other->has<DeleteBulletsOnHit>() && !other->get<DeleteBulletsOnHit>()->disable) {
+//            fireball->set<DeleteMe>({});
+//        }
+//
+//        if (doPlayerHit && enemy) {
+//            player->get_mut<PlayerClass>()->playerHit(player);
+//        }
+//    } else
+//    {
+//
+//    }
+//
+//
+//}
 
 void World::_clear() {
 

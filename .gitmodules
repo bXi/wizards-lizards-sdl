@@ -13,3 +13,6 @@
 [submodule "libs/bixxy-engine"]
 	path = libs/bixxy-engine
 	url = git@github.com:bXi/bixxy-engine.git
+[submodule "libs/box2c"]
+	path = libs/box2c
+	url = https://github.com/erincatto/box2c

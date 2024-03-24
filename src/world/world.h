@@ -21,7 +21,7 @@ public:
     vf2d Size = { 0,0 };
     vf2d HalfSize = { 0,0 };
 
-    b2PolygonShape Box;
+    b2Polygon Box;
 
     PhysicsWall(const vf2d& pos, const vf2d& size);
     void draw() override;
@@ -29,7 +29,7 @@ public:
 
 
 
-class World : public b2ContactListener {
+class World {
 public:
 
     static void init()
@@ -52,9 +52,9 @@ public:
         return get()._backgroundColor;
     }
 
-    static b2Body* createBody(const b2BodyDef* body)
+    static b2BodyId createBody(const b2BodyDef* body)
     {
-        return get().world.CreateBody(body);
+        return b2CreateBody(get().worldId, body);
     }
 
     static void addObject(PhysicsObject* object)
@@ -72,19 +72,19 @@ public:
         get().objects.clear();
 
         // Create a list to store the bodies that need to be removed
-        std::vector<b2Body*> bodiesToRemove;
-
-        // Iterate over all the bodies in the world and add them to the removal list
-        b2Body* body = get().world.GetBodyList();
-        while (body != nullptr) {
-            bodiesToRemove.push_back(body);
-            body = body->GetNext();
-        }
-
-        // Remove the bodies from the world
-        for (b2Body* _body : bodiesToRemove) {
-            get().world.DestroyBody(_body);
-        }
+//        std::vector<b2Body*> bodiesToRemove;
+//
+//        // Iterate over all the bodies in the world and add them to the removal list
+//        b2Body* body = get().world.GetBodyList();
+//        while (body != nullptr) {
+//            bodiesToRemove.push_back(body);
+//            body = body->GetNext();
+//        }
+//
+//        // Remove the bodies from the world
+//        for (b2Body* _body : bodiesToRemove) {
+//            get().world.DestroyBody(_body);
+//        }
     }
 
     static std::vector<vi2d> getSpawners()
@@ -99,25 +99,25 @@ public:
 
     static void doStep(float timeStep, int velocityIterations, int positionIterations)
     {
-        get().world.Step(timeStep, velocityIterations, positionIterations);
+        b2World_Step(get().worldId, timeStep, 8);
     }
 
-    static b2World& getPhysicsWorld()
-    {
-        return get().world;
-    }
+//    static b2World& getPhysicsWorld()
+//    {
+//        return get().world;
+//    }
 
 
     static void draw()
     {
         std::vector<PhysicsObject*> tempObjects = get().objects;  // Create a temporary copy
 
-        std::sort(tempObjects.begin(), tempObjects.end(), [](PhysicsObject* a, PhysicsObject* b) {
-            return a->RigidBody->GetPosition().y < b->RigidBody->GetPosition().y;
-            });
+//        std::sort(tempObjects.begin(), tempObjects.end(), [](PhysicsObject* a, PhysicsObject* b) {
+//            return a->RigidBody->GetPosition().y < b->RigidBody->GetPosition().y;
+//        });
 
         for (auto const object : tempObjects) {
-            if (object->RigidBody != nullptr) {
+            if (b2Body_IsValid(object->  RigidBodyId)) {
                 object->draw();
             }
         }
@@ -163,12 +163,12 @@ public:
 
     // Implement the collision listener functions
 
-    void BeginContact(b2Contact* contact) override;
-
-    void EndContact(b2Contact* contact) override
-    {
-        get().handleCollision(contact, false);
-    }
+//    void BeginContact(b2Contact* contact) override;
+//
+//    void EndContact(b2Contact* contact) override
+//    {
+//        get().handleCollision(contact, false);
+//    }
 
     static Dungeon getDungeon() {
         return get().dungeon;
@@ -196,7 +196,7 @@ public:
 private:
     void _init();
     void _clear();
-    void handleCollision(b2Contact* contact, bool beginCollision);
+    //void handleCollision(b2Contact* contact, bool beginCollision);
 
     std::vector<Room*> rooms;
 
@@ -219,7 +219,9 @@ private:
     bool playSlowMotionExit = false;
 
     b2Vec2 gravity = {0.0f, 0.0f};    // Y+ is down, so gravity is not negative
-    b2World world = b2World(gravity);
+    b2WorldDef worldDef;
+    b2WorldId worldId;
+
 public:
     World(const World&) = delete;
     static World& get() { static World instance; return instance; }
@@ -227,7 +229,11 @@ public:
 private:
     World()
     {
-        world.SetContactListener(this);
+        worldDef = b2DefaultWorldDef();
+        worldDef.gravity = gravity;
+        worldId = b2CreateWorld(&worldDef);
+
+        //world.SetContactListener(this);
 
         slowMotionLerp = Lerp::getLerp("SlowMoLerp", 1.0f, 2.0f, 0.5f);
         slowMotionLerp->started = false;
